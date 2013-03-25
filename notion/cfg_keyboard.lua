@@ -39,6 +39,8 @@ defbindings("WScreen", {
     kpress(ALTMETA.."F12", "mod_query.query_menu(_, _sub, 'mainmenu', 'Main menu:')"),
     kpress(META.."F12", "mod_query.query_menu(_, _sub, 'mainmenu', 'Main menu:')"),
 
+    bdoc("Run emacs."),
+    kpress(META.."E", "exec('emacs')"),
 })
 
 
