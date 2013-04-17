@@ -25,7 +25,7 @@ alias em='emacs -nw'
 
 alias rdesktop-ts='rdesktop -u mfarrell -d TWOSIGMA -z -g 1356x738 localhost:7777'
 alias rdesktop-ts2='rdesktop -u mfarrell -d TWOSIGMA -z -g 2048x1500 localhost:7777'
-alias vncandroid='vncserver'
+alias vncandroid='vncserver -geometry 720x1280'
 alias vncipad='vncserver -geometry 2048x1536'
 
 alias git=hub
