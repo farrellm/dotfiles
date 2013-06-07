@@ -45,6 +45,9 @@ alias grr='git remote rm'
 alias gpu='git pull'
 alias gcl='git clone'
 
+# alias gg='log --graph --all --format=format:"%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)" --abbrev-commit --date=relative'
+alias gg='git log --graph --oneline --all'
+
 # login stuff
 if status --is-login
 	# start X
