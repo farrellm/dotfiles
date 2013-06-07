@@ -10,6 +10,7 @@
 ;;  golden-ratio
 ;;  lua-mode
 ;;  nrepl
+;;  nrepl-ritz
 ;;  paredit
 ;;  popup
 ;;  rainbow-delimiters
@@ -50,6 +51,32 @@
   ;; parens
   (global-rainbow-delimiters-mode)
 
+  ;; nrepl
+  (require 'nrepl)
+
+  ;; Configure nrepl.el
+  (setq nrepl-hide-special-buffers t)
+  (setq nrepl-popup-stacktraces-in-repl t)
+  (setq nrepl-history-file "~/.emacs.d/nrepl-history")
+  
+  ;; Some default eldoc facilities
+  (add-hook 'nrepl-connected-hook
+	    (defun pnh-clojure-mode-eldoc-hook ()
+	      (add-hook 'clojure-mode-hook 'turn-on-eldoc-mode)
+	      (add-hook 'nrepl-interaction-mode-hook 'nrepl-turn-on-eldoc-mode)
+	      (nrepl-enable-on-existing-clojure-buffers)))
+  
+  ;; Repl mode hook
+  (add-hook 'nrepl-mode-hook 'subword-mode)
+
+  ;; Ritz middleware
+  (require 'nrepl-ritz) ;; after (require 'nrepl)
+ 
+  (define-key nrepl-interaction-mode-map (kbd "C-c C-j") 'nrepl-javadoc)
+  (define-key nrepl-mode-map (kbd "C-c C-j") 'nrepl-javadoc)
+  (define-key nrepl-interaction-mode-map (kbd "C-c C-a") 'nrepl-apropos)
+  (define-key nrepl-mode-map (kbd "C-c C-a") 'nrepl-apropos)
+
   ;; auto-complete
   (require 'auto-complete)
   (add-to-list 'ac-modes 'R-mode)
@@ -58,11 +85,12 @@
   (require 'auto-complete-config)
   (ac-config-default)
 
+  ;; Auto completion for NREPL
   (require 'ac-nrepl)
-  (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-  (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
   (eval-after-load "auto-complete"
     '(add-to-list 'ac-modes 'nrepl-mode))
+  (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
+  ;; (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
 
   (setq ac-use-menu-map t)
   (define-key ac-completing-map "\e" 'stop-ac-and-normal)
