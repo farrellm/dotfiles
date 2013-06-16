@@ -14,7 +14,8 @@ URxvt*font: xft:Droid Sans Mono:pixelsize=12:antialias=true:hinting=true
 xpdf*background: grey
 
 ! Zenburn color-scheme
-urxvt*background:  #3f3f3f
+! urxvt*background:  #3f3f3f
+urxvt*background:  #3c3c3c
 urxvt*foreground:  #dcdccc
 ! black + red
 !urxvt*color0:     #3f3f3f
