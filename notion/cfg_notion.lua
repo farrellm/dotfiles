@@ -5,12 +5,22 @@
 -- The rest of the settings are in cfg_notioncore.lua and individual modules'
 -- configuration files (cfg_modulename.lua). 
 
-dopath("cfg_debian")
 META="Mod4+"
 --ALTMETA=""
 
 -- Terminal emulator
-XTERM="urxvt -sk -sr -si -sl 5000 -scrollstyle plain -urgentOnBell"
+if os and os.execute("test -x /usr/bin/urxvt") then
+    XTERM="/usr/bin/urxvt -sk -sr -si -sl 5000 -scrollstyle plain -urgentOnBell"
+else
+    XTERM="/usr/bin/xterm"
+end
+
+-- Program launcher
+if os and os.execute("test -x /usr/bin/gmrun") then
+    LAUNCHER="ioncore.exec_on(_, '/usr/bin/gmrun')"
+else
+    LAUNCHER="mod_query.query_exec(_)"
+end
 
 -- Some basic settings
 ioncore.set{
@@ -37,4 +47,4 @@ ioncore.set{
 }
 
 dopath("cfg_defaults")
-
+dopath("look-bluesteel")

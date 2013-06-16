@@ -88,10 +88,10 @@ defbindings("WMPlex.toplevel", {
     kpress(META.."Q", "WRegion.set_tagged(_sub, 'toggle')", "_sub:non-nil"),
 
     bdoc("Run a terminal emulator."),
-    kpress(META.."T", "notioncore.exec_on(_, XTERM or 'x-terminal-emulator')"),
+    kpress(META.."T", "ioncore.exec_on(_, XTERM or 'x-terminal-emulator')"),
     
     bdoc("Query for command line to execute."),
-    kpress(META.."R", "mod_query.query_exec(_)"),
+    kpress(META.."R", LAUNCHER),
 
     bdoc("Query for Lua code to execute."),
     kpress(META.."F3", "mod_query.query_lua(_)"),
