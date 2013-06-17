@@ -7,8 +7,8 @@ defbindings("WScreen", {
     kpress(META.."bracketright", "WScreen.switch_next(_)"),
 
     -- Focus moving goodness... Emacs style!
-    kpress(META.."L", "ioncore.goto_next(_chld, 'left')"),
-    kpress(META.."H", "ioncore.goto_next(_chld, 'right')"),
+    kpress(META.."L", "ioncore.goto_next(_chld, 'right')"),
+    kpress(META.."H", "ioncore.goto_next(_chld, 'left')"),
     kpress(META.."K", "ioncore.goto_next(_chld, 'up')"),
     kpress(META.."J", "ioncore.goto_next(_chld, 'down')"),
 
