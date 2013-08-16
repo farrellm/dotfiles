@@ -2,6 +2,11 @@
 # ~/.config/fish/config.fish
 #
 
+setenv EDITOR vim
+setenv PATH ~/bin $PATH /sbin /usr/sbin
+setenv JAVA_HOME /usr/lib/jvm/java-7-openjdk
+# setenv LD_LIBRARY_PATH /usr/local/opencv/share/OpenCV/java/
+
 # If not running interactively, don't do anything
 if not status --is-interactive
 	exit
@@ -9,13 +14,6 @@ end
 
 # turn off audible bell
 xset -b
-
-
-setenv EDITOR vim
-setenv PATH ~/bin $PATH /sbin /usr/sbin
-setenv JAVA_HOME /usr/lib/jvm/java-7-openjdk
-# setenv LD_LIBRARY_PATH /usr/local/opencv/share/OpenCV/java/
-
 
 # aliases
 alias ls='ls --color=auto'
@@ -54,6 +52,13 @@ if status --is-login
 	test -z $DISPLAY; and test $XDG_VTNR -eq 1; and exec startx
 end
 
+function prompt_git
+    git rev-parse --abbrev-ref HEAD
+end
+
+function is_git
+    git rev-parse --git-dir 1>/dev/null 2>/dev/null
+end
 
 function fish_prompt --description "Write out the prompt"
     # Just calculate these once, to save a few cycles when displaying the prompt
@@ -80,6 +85,10 @@ function fish_prompt --description "Write out the prompt"
 	    if not set -q __fish_prompt_cwd
 		set -g __fish_prompt_cwd (set_color $fish_color_cwd)
 	    end
-	    echo -n -s "$USER" @ "$__fish_prompt_hostname" ' ' "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" '> ' \a
+	    if is_git
+		echo -n -s "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" " (" (prompt_git) "$__fish_prompt_normal" ')> ' \a
+	    else
+		echo -n -s "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" '> ' \a
+	    end
     end
 end
