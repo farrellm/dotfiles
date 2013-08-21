@@ -26,6 +26,10 @@ alias rdesktop-ts2='rdesktop -u mfarrell -d TWOSIGMA -z -g 2048x1500 localhost:7
 alias vncandroid='vncserver -geometry 720x1280'
 alias vncipad='vncserver -geometry 2048x1536'
 
+function brightness
+    sudo sh -c "echo $argv > /sys/class/backlight/acpi_video0/brightness "
+end
+
 alias git=hub
 
 alias ga='git add'
