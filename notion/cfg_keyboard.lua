@@ -7,10 +7,10 @@ defbindings("WScreen", {
     kpress(META.."bracketright", "WScreen.switch_next(_)"),
 
     -- Focus moving goodness... Emacs style!
-    kpress(META.."L", "ioncore.goto_next(_chld, 'right')"),
-    kpress(META.."H", "ioncore.goto_next(_chld, 'left')"),
-    kpress(META.."K", "ioncore.goto_next(_chld, 'up')"),
-    kpress(META.."J", "ioncore.goto_next(_chld, 'down')"),
+    kpress(META.."F", "ioncore.goto_next(_chld, 'right')"),
+    kpress(META.."B", "ioncore.goto_next(_chld, 'left')"),
+    kpress(META.."P", "ioncore.goto_next(_chld, 'up')"),
+    kpress(META.."N", "ioncore.goto_next(_chld, 'down')"),
 
     bdoc("Go to first object on activity/urgency list."),
     -- This is killer in conjunction with using a terminal that
