@@ -1,0 +1,238 @@
+#+TITLE: Emacs init file written in org-mode
+#+AUTHOR: Matthew Farrell
+#+EMAIL: farrellm@alum.mit.edu
+
+* basic ui
+** common
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-splash-screen t)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+#+END_SRC
+
+** window only
+#+BEGIN_SRC emacs-lisp
+  (when window-system
+    (blink-cursor-mode 0)
+    (setq-default cursor-type 'bar))
+#+END_SRC
+
+** It's annoying to have to type 'yes' to answer questions. One letter is enough for confirmation.
+#+BEGIN_SRC emacs-lisp
+  (fset 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+
+** Ido, which is short for "Interactively Do Things," is an amazingly efficient way to select files and switch buffers.
+#+BEGIN_SRC emacs-lisp
+  (ido-mode t)
+#+END_SRC
+
+** auto-revert buffers
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode t)
+#+END_SRC
+** parenthesis highlight
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode t)
+  (set-face-foreground 'show-paren-match "white")
+#+END_SRC
+** global keybindings
+#+BEGIN_SRC emacs-lisp
+  (defun prev-window ()
+    "previous window"
+    (interactive)
+    (other-window -1))
+
+  (global-set-key (kbd "C-x p") 'prev-window)
+  (global-set-key (kbd "C-x x") 'execute-extended-command)
+  (global-set-key (kbd "C-X C-b") 'ibuffer)
+  (global-set-key (kbd "C-X g") 'goto-line)
+  (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+#+END_SRC
+* packages
+** auto-complete
+#+BEGIN_SRC emacs-lisp
+  (defvar ac-ignore-case nil)
+
+  (add-hook 'after-init-hook
+            (lambda ()
+              (require 'auto-complete)
+              (require 'auto-complete-config)
+
+              (ac-config-default)
+              (ac-flyspell-workaround)
+
+              (add-to-list 'ac-modes 'org-mode)))
+#+END_SRC
+*** org
+**** auto-complete
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "org"
+    '(progn
+       (require 'org-ac)
+       (org-ac/config-default)))
+#+END_SRC
+**** babel
+***** disable evaluation confirmations
+#+BEGIN_SRC emacs-lisp
+  (defvar org-confirm-babel-evaluate nil)
+#+END_SRC
+***** inline images
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)   
+  (add-hook 'org-mode-hook 'org-display-inline-images)
+#+END_SRC
+***** load languages
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/home/mfarrell/.emacs.d/ob-julia")
+  (eval-after-load "org"
+    '(progn
+       (org-babel-do-load-languages
+        'org-babel-load-languages
+        '((emacs-lisp . t)
+          (haskell . t)
+          (julia . t)))))
+#+END_SRC
+** cider
+*** keybindings
+#+BEGIN_SRC emacs-lisp
+  ;; (defun count-last-sexp ()
+  ;;        (interactive)
+  ;;        (cider-interactive-eval
+  ;;          (format "(count %s)"
+  ;;                  (cider-last-sexp))))
+
+  ;; (defun nth-from-last-sexp (n)
+  ;;        (interactive "p")
+  ;;        (cider-interactive-eval
+  ;;          (format "(nth %s %s)"
+  ;;                  (cider-last-sexp) n)))
+
+  ;; (defun spit-scad-last-sexp ()
+  ;;   (interactive)
+  ;;   (cider-interactive-eval
+  ;;     (format    
+  ;;       "(require 'scad-clj.scad)
+  ;;        (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
+  ;;       (cider-last-sexp))))
+
+  ;; (defun frame-last-sexp ()
+  ;;   (interactive)
+  ;;   (cider-interactive-eval
+  ;;     (format    
+  ;;      "(doto (javax.swing.JFrame. \"eval\")
+  ;;         (.. (getContentPane) (add %s))
+  ;;         (.pack)
+  ;;         (.show))"
+  ;;      (cider-last-sexp))))
+
+  ;; (defun benchmark-last-sexp ()
+  ;;   (interactive)
+  ;;   (cider-interactive-eval
+  ;;     (format "(require 'criterium.core)
+  ;;              (criterium.core/quick-benchmark %s)"
+  ;;             (cider-last-sexp))))
+
+  ;; (eval-after-load "cider"
+  ;;   '(progn
+  ;;      (define-key cider-mode-map (kbd "C-c c") 'count-last-sexp)
+  ;;      (define-key cider-mode-map (kbd "C-c n") `nth-from-last-sexp)
+  ;;      (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
+  ;;      (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
+  ;;      (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
+#+END_SRC
+** ESS
+*** load
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/home/mfarrell/.emacs.d/ESS/lisp/")
+  (load "ess-site")
+#+END_SRC
+*** julia
+#+BEGIN_SRC emacs-lisp
+  (defvar inferior-julia-program-name "/home/mfarrell/bin/julia")
+#+END_SRC
+** flycheck
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+#+END_SRC
+** haskell
+#+BEGIN_SRC emacs-lisp
+  (defvar haskell-font-lock-symbols t)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+#+END_SRC
+** org
+#+BEGIN_SRC emacs-lisp
+  (defvar org-startup-indented t)
+  (defvar org-src-fontify-natively t)
+#+END_SRC
+** smartparens
+   https://github.com/Fuco1/smartparens/wiki/Example-configuration
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load "smartparens-autoloads"
+    '(progn
+       (require 'smartparens-config)
+       (smartparens-global-mode t)
+       (smartparens-global-strict-mode t)
+
+       ;; highlights matching pairs
+       (show-smartparens-global-mode t)
+
+       ;; keybinding management
+       (sp-use-smartparens-bindings)
+
+       ;; pair management
+       (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+
+       ;; markdown-mode
+       (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+         (sp-local-pair "*" "*" :bind "C-*")
+         (sp-local-tag "2" "**" "**")
+         (sp-local-tag "s" "```scheme" "```")
+         (sp-local-tag "<" "<_>" "</_>" :transform 'sp-match-sgml-tags))
+
+       ;; tex-mode latex-mode
+       (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+         (sp-local-tag "i" "\"<" "\">"))
+
+       ;; html-mode
+       (sp-with-modes '(html-mode sgml-mode)
+         (sp-local-pair "<" ">"))
+
+       ;; lisp modes
+       (sp-with-modes sp--lisp-modes
+         (sp-local-pair "(" nil :bind "C-("))
+
+       (require 'smartparens-latex)
+       ))
+#+END_SRC
+* package management
+#+BEGIN_SRC emacs-lisp
+  (package-initialize)
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+#+END_SRC
+
+* miscellaneous
+#+BEGIN_SRC emacs-lisp
+  (setq x-select-enable-clipboard-manager nil)
+#+END_SRC
+
+* customization
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(custom-enabled-themes (quote (zenburn)))
+   '(custom-safe-themes (quote ("c2cfe2f1440d9ef4bfd3ef4cf15bfe35ff40e6d431264b1e24af64f145cffb11" default))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+#+END_SRC
