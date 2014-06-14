@@ -97,50 +97,50 @@
 ** cider
 *** keybindings
 #+BEGIN_SRC emacs-lisp
-  ;; (defun count-last-sexp ()
-  ;;        (interactive)
-  ;;        (cider-interactive-eval
-  ;;          (format "(count %s)"
-  ;;                  (cider-last-sexp))))
+  (defun count-last-sexp ()
+         (interactive)
+         (cider-interactive-eval
+           (format "(count %s)"
+                   (cider-last-sexp))))
 
-  ;; (defun nth-from-last-sexp (n)
-  ;;        (interactive "p")
-  ;;        (cider-interactive-eval
-  ;;          (format "(nth %s %s)"
-  ;;                  (cider-last-sexp) n)))
+  (defun nth-from-last-sexp (n)
+         (interactive "p")
+         (cider-interactive-eval
+           (format "(nth %s %s)"
+                   (cider-last-sexp) n)))
 
-  ;; (defun spit-scad-last-sexp ()
-  ;;   (interactive)
-  ;;   (cider-interactive-eval
-  ;;     (format    
-  ;;       "(require 'scad-clj.scad)
-  ;;        (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
-  ;;       (cider-last-sexp))))
+  (defun spit-scad-last-sexp ()
+    (interactive)
+    (cider-interactive-eval
+      (format    
+        "(require 'scad-clj.scad)
+         (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
+        (cider-last-sexp))))
 
-  ;; (defun frame-last-sexp ()
-  ;;   (interactive)
-  ;;   (cider-interactive-eval
-  ;;     (format    
-  ;;      "(doto (javax.swing.JFrame. \"eval\")
-  ;;         (.. (getContentPane) (add %s))
-  ;;         (.pack)
-  ;;         (.show))"
-  ;;      (cider-last-sexp))))
+  (defun frame-last-sexp ()
+    (interactive)
+    (cider-interactive-eval
+      (format    
+       "(doto (javax.swing.JFrame. \"eval\")
+          (.. (getContentPane) (add %s))
+          (.pack)
+          (.show))"
+       (cider-last-sexp))))
 
-  ;; (defun benchmark-last-sexp ()
-  ;;   (interactive)
-  ;;   (cider-interactive-eval
-  ;;     (format "(require 'criterium.core)
-  ;;              (criterium.core/quick-benchmark %s)"
-  ;;             (cider-last-sexp))))
+  (defun benchmark-last-sexp ()
+    (interactive)
+    (cider-interactive-eval
+      (format "(require 'criterium.core)
+               (criterium.core/quick-benchmark %s)"
+              (cider-last-sexp))))
 
-  ;; (eval-after-load "cider"
-  ;;   '(progn
-  ;;      (define-key cider-mode-map (kbd "C-c c") 'count-last-sexp)
-  ;;      (define-key cider-mode-map (kbd "C-c n") `nth-from-last-sexp)
-  ;;      (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
-  ;;      (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
-  ;;      (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
+  (eval-after-load "cider"
+    '(progn
+       (define-key cider-mode-map (kbd "C-c c") 'count-last-sexp)
+       (define-key cider-mode-map (kbd "C-c n") `nth-from-last-sexp)
+       (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
+       (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
+       (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
 #+END_SRC
 ** ESS
 *** load
