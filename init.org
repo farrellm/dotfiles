@@ -37,6 +37,10 @@
   (show-paren-mode t)
   (set-face-foreground 'show-paren-match "white")
 #+END_SRC
+** follow symlinks to version controlled files
+#+BEGIN_SRC emacs-lisp
+  (setq vc-follow-symlinks nil)
+#+END_SRC
 ** global keybindings
 #+BEGIN_SRC emacs-lisp
   (defun prev-window ()
@@ -63,15 +67,17 @@
               (ac-config-default)
               (ac-flyspell-workaround)
 
-              (add-to-list 'ac-modes 'org-mode)))
+              ;; (add-to-list 'ac-modes 'org-mode)
+              ))
 #+END_SRC
 *** org
 **** auto-complete
 #+BEGIN_SRC emacs-lisp
   (eval-after-load "org"
     '(progn
-       (require 'org-ac)
-       (org-ac/config-default)))
+       ;; (require 'org-ac)
+       ;; (org-ac/config-default)
+       ))
 #+END_SRC
 **** babel
 ***** disable evaluation confirmations
@@ -150,7 +156,7 @@
 #+END_SRC
 *** julia
 #+BEGIN_SRC emacs-lisp
-  (defvar inferior-julia-program-name "/home/mfarrell/bin/julia")
+  (setq inferior-julia-program-name "/home/mfarrell/bin/julia")
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
@@ -158,10 +164,55 @@
 #+END_SRC
 ** haskell
 #+BEGIN_SRC emacs-lisp
+  ;;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
+
+  ;;; haskell-mode
+  (setenv "PATH" (concat "~/.cabal/bin:" (getenv "PATH")))
+  (add-to-list 'exec-path "~/.cabal/bin")
+  (custom-set-variables '(haskell-tags-on-save t))
+
+  (custom-set-variables
+    '(haskell-process-suggest-remove-import-lines t)
+    '(haskell-process-auto-import-loaded-modules t)
+    '(haskell-process-log t))
+  (eval-after-load 'haskell-mode '(progn
+    (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+    (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+    (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+    (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+    (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
+    (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
+    (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
+  (eval-after-load 'haskell-cabal '(progn
+    (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
+    (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
+    (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+    (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+
+  (custom-set-variables '(haskell-process-type 'cabal-repl))
+
+  ;;; ghc-mod
+  ;; (autoload 'ghc-init "ghc" nil t)
+  ;; (autoload 'ghc-debug "ghc" nil t)
+  ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
+  ;;; company
+  (add-hook 'haskell-mode-hook 'company-mode)
+  (custom-set-variables '(company-ghc-show-info t))
+  (eval-after-load "company"
+    '(progn
+       (add-to-list 'company-backends 'company-ghc)))
+
   (defvar haskell-font-lock-symbols t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+
+  (eval-after-load 'haskell-mode
+    '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 #+END_SRC
 ** org
 #+BEGIN_SRC emacs-lisp
@@ -208,11 +259,65 @@
        (require 'smartparens-latex)
        ))
 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  ;;; keybinding management
+  (eval-after-load "smartparens-autoloads"
+    '(progn
+       (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+       (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+
+       (define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+       (define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+       (define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+       (define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+
+       (define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+       (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+       (define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+       (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+
+       (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+       (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+
+       (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+       (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+
+       (define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
+       (define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+
+       (define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
+       (define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
+       (define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+       (define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+
+       (define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+       (define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+       (define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+       (define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+
+       (define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+       (define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+       (define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+
+       (define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+       (define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+
+       (define-key sp-keymap (kbd "s-t") 'sp-prefix-tag-object)
+       (define-key sp-keymap (kbd "s-p") 'sp-prefix-pair-object)
+       (define-key sp-keymap (kbd "s-s c") 'sp-convolute-sexp)
+       (define-key sp-keymap (kbd "s-s a") 'sp-absorb-sexp)
+       (define-key sp-keymap (kbd "s-s e") 'sp-emit-sexp)
+       (define-key sp-keymap (kbd "s-s p") 'sp-add-to-previous-sexp)
+       (define-key sp-keymap (kbd "s-s n") 'sp-add-to-next-sexp)
+       (define-key sp-keymap (kbd "s-s j") 'sp-join-sexp)
+       (define-key sp-keymap (kbd "s-s s") 'sp-split-sexp)))
+#+END_SRC
 * package management
 #+BEGIN_SRC emacs-lisp
   (package-initialize)
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  ;; (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 #+END_SRC
 
 * miscellaneous
@@ -222,17 +327,17 @@
 
 * customization
 #+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(custom-enabled-themes (quote (zenburn)))
-   '(custom-safe-themes (quote ("c2cfe2f1440d9ef4bfd3ef4cf15bfe35ff40e6d431264b1e24af64f145cffb11" default))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
+   (custom-set-variables
+    ;; custom-set-variables was added by Custom.
+    ;; If you edit it by hand, you could mess it up, so be careful.
+    ;; Your init file should contain only one such instance.
+    ;; If there is more than one, they won't work right.
+    '(custom-enabled-themes (quote (zenburn)))
+    '(custom-safe-themes (quote ("3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
+   (custom-set-faces
+    ;; custom-set-faces was added by Custom.
+    ;; If you edit it by hand, you could mess it up, so be careful.
+    ;; Your init file should contain only one such instance.
+    ;; If there is more than one, they won't work right.
+    )
 #+END_SRC
