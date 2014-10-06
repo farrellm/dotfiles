@@ -91,14 +91,15 @@
 #+END_SRC
 ***** load languages
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/home/mfarrell/.emacs.d/ob-julia")
-  (eval-after-load "org"
-    '(progn
-       (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
-          (haskell . t)
-          (julia . t)))))
+    (add-to-list 'load-path "/home/mfarrell/.emacs.d/ob-julia")
+    (eval-after-load "org"
+      '(progn
+         (org-babel-do-load-languages
+          'org-babel-load-languages
+          '((emacs-lisp . t)
+            (haskell . t)
+            (julia . t)
+            (R . t)))))
 #+END_SRC
 ** cider
 *** keybindings
@@ -327,17 +328,19 @@
 
 * customization
 #+BEGIN_SRC emacs-lisp
-   (custom-set-variables
-    ;; custom-set-variables was added by Custom.
-    ;; If you edit it by hand, you could mess it up, so be careful.
-    ;; Your init file should contain only one such instance.
-    ;; If there is more than one, they won't work right.
-    '(custom-enabled-themes (quote (zenburn)))
-    '(custom-safe-themes (quote ("3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
-   (custom-set-faces
-    ;; custom-set-faces was added by Custom.
-    ;; If you edit it by hand, you could mess it up, so be careful.
-    ;; Your init file should contain only one such instance.
-    ;; If there is more than one, they won't work right.
-    )
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . default) ("\\.x?html?\\'" . default) ("\\.pdf\\'" . "evince %s"))))
+   '(org-latex-pdf-process (quote ("pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f")))
+   '(custom-enabled-themes (quote (zenburn)))
+   '(custom-safe-themes (quote ("3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" default))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
 #+END_SRC
