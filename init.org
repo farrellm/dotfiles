@@ -82,6 +82,10 @@
   ;;      (require 'org-ac)
   ;;      (org-ac/config-default)))
 #+END_SRC
+*** export
+#+BEGIN_SRC emacs-lisp
+  (defvar org-export-allow-bind-keywords t)
+#+END_SRC
 *** babel
 **** misc
 #+BEGIN_SRC emacs-lisp
