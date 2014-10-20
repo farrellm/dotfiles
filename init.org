@@ -59,6 +59,11 @@
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 #+END_SRC
 * packages
+** auctex
+Annoying, but seems to be needed since 24.4
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "/home/mfarrell/.emacs.d/elpa/auctex-11.87.7")
+#+END_SRC
 ** auto-complete
 #+BEGIN_SRC emacs-lisp
   (defvar ac-ignore-case nil)
