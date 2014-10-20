@@ -166,7 +166,7 @@
 *** load
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "/home/mfarrell/.emacs.d/ESS/lisp/")
-  (load "ess-site")
+  (require 'ess-site)
 #+END_SRC
 *** julia
 #+BEGIN_SRC emacs-lisp
