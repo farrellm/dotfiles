@@ -4,18 +4,20 @@ filetype off                   " required!
 set mouse=a
 
 set shell=/bin/bash
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim/
+call vundle#begin()
 
 " let Vundle manage Vundle
 " required! 
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/Vundle.vim'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'jnurmine/Zenburn'
 
+" All of your Plugins must be added before the following line
+call vundle#end()             " required
 filetype plugin indent on     " required!
 
-colorscheme zenburn
+" colorscheme zenburn
 
 "syntax highlighting
 syntax on
