@@ -62,7 +62,7 @@
 ** auctex
 Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/home/mfarrell/.emacs.d/elpa/auctex-11.87.7")
+  (add-to-list 'load-path "~/.emacs.d/elpa/auctex-11.87.7")
 #+END_SRC
 ** auto-complete
 #+BEGIN_SRC emacs-lisp
@@ -108,7 +108,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 **** load languages
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/home/mfarrell/.emacs.d/ob-julia")
+  (add-to-list 'load-path "~/.emacs.d/ob-julia")
   (eval-after-load "org"
     '(progn
        (org-babel-do-load-languages
@@ -167,15 +167,19 @@ Annoying, but seems to be needed since 24.4
        (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
        (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
 #+END_SRC
+*** misc
+#+BEGIN_SRC emacs-lisp
+  (defvar clojure-defun-indents '(match))
+#+END_SRC
 ** ESS
 *** load
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "/home/mfarrell/.emacs.d/ESS/lisp/")
+  (add-to-list 'load-path "~/.emacs.d/ESS/lisp/")
   (require 'ess-site)
 #+END_SRC
 *** julia
 #+BEGIN_SRC emacs-lisp
-  (setq inferior-julia-program-name "/home/mfarrell/bin/julia")
+  (setq inferior-julia-program-name "~/bin/julia")
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
