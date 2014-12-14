@@ -40,3 +40,8 @@ alias gra='git remote add'
 alias grr='git remote rm'
 alias gpu='git pull'
 alias gcl='git clone'
+
+if status --is-interactive;
+	eval (keychain --eval --agents ssh id_rsa --quiet)
+	[ -e $HOME/.keychain/(hostname)-fish ]; and . $HOME/.keychain/(hostname)-fish
+end
