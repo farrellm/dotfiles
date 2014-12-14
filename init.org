@@ -76,8 +76,24 @@ Annoying, but seems to be needed since 24.4
               (ac-config-default)
               (ac-flyspell-workaround)
 
+              (require 'ac-cider)
+
               ;; (add-to-list 'ac-modes 'org-mode)
               ))
+#+END_SRC
+*** cider
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+  (add-hook 'cider-mode-hook 'ac-cider-setup)
+  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+  (eval-after-load "auto-complete"
+    '(add-to-list 'ac-modes 'cider-mode))
+
+  (defun set-auto-complete-as-completion-at-point-function ()
+    (setq completion-at-point-functions '(auto-complete)))
+
+  (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
+  (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 #+END_SRC
 ** org
 *** auto-complete
@@ -200,15 +216,15 @@ Annoying, but seems to be needed since 24.4
     '(haskell-process-log t))
   (eval-after-load 'haskell-mode '(progn
     (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-    (define-key haskell-mode-map (kbd "C-`") 'haskell-interactive-bring)
+    (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
     (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
     (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
     (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
     (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
     (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
   (eval-after-load 'haskell-cabal '(progn
-    (define-key haskell-cabal-mode-map (kbd "C-`") 'haskell-interactive-bring)
-    (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-ode-clear)
+    (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+    (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
     (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
     (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
 
