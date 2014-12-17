@@ -76,24 +76,9 @@ Annoying, but seems to be needed since 24.4
               (ac-config-default)
               (ac-flyspell-workaround)
 
-              (require 'ac-cider)
-
-              ;; (add-to-list 'ac-modes 'org-mode)
+              (delete 'clojure-mode ac-modes)
+              (delete 'haskell-mode ac-modes)
               ))
-#+END_SRC
-*** cider
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
-  (add-hook 'cider-mode-hook 'ac-cider-setup)
-  (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
-  (eval-after-load "auto-complete"
-    '(add-to-list 'ac-modes 'cider-mode))
-
-  (defun set-auto-complete-as-completion-at-point-function ()
-    (setq completion-at-point-functions '(auto-complete)))
-
-  (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
-  (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 #+END_SRC
 ** org
 *** auto-complete
@@ -182,6 +167,11 @@ Annoying, but seems to be needed since 24.4
        (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
        (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
        (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
+#+END_SRC
+*** company
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'cider-repl-mode-hook 'company-mode)
+  (add-hook 'cider-mode-hook 'company-mode)
 #+END_SRC
 *** misc
 #+BEGIN_SRC emacs-lisp
@@ -370,8 +360,12 @@ Annoying, but seems to be needed since 24.4
           (smartparens . "melpa-stable")
           (zenburn-theme . "melpa-stable")
 
+          (markdown-mode . "melpa-stable")
+
+          (async . "melpa-stable")
           (dash . "melpa-stable")
           (epl . "melpa-stable")
+          (helm . "melpa-stable")
           (pkg-info . "melpa-stable")
           (popup . "melpa-stable")))
 #+END_SRC
