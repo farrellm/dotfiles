@@ -58,6 +58,12 @@
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
 #+END_SRC
+** whitespace
+#+BEGIN_SRC emacs-lisp
+  (setq indent-tabs-mode nil)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
 * packages
 ** auctex
 Annoying, but seems to be needed since 24.4
@@ -66,19 +72,23 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 ** auto-complete
 #+BEGIN_SRC emacs-lisp
-  (defvar ac-ignore-case nil)
+  ;; (defvar ac-ignore-case nil)
 
-  (add-hook 'after-init-hook
-            (lambda ()
-              (require 'auto-complete)
-              (require 'auto-complete-config)
+  ;; (add-hook 'after-init-hook
+  ;;           (lambda ()
+  ;;             (require 'auto-complete)
+  ;;             (require 'auto-complete-config)
 
-              (ac-config-default)
-              (ac-flyspell-workaround)
+  ;;             (ac-config-default)
+  ;;             (ac-flyspell-workaround)
 
-              (delete 'clojure-mode ac-modes)
-              (delete 'haskell-mode ac-modes)
-              ))
+  ;;             (delete 'clojure-mode ac-modes)
+  ;;             (delete 'haskell-mode ac-modes)
+  ;;             ))
+#+END_SRC
+** company
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 ** org
 *** auto-complete
@@ -104,7 +114,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 **** inline images
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)   
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   (add-hook 'org-mode-hook 'org-display-inline-images)
 #+END_SRC
 **** load languages
@@ -138,7 +148,7 @@ Annoying, but seems to be needed since 24.4
   (defun spit-scad-last-sexp ()
     (interactive)
     (cider-interactive-eval
-      (format    
+      (format
         "(require 'scad-clj.scad)
          (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
         (cider-last-sexp))))
@@ -146,7 +156,7 @@ Annoying, but seems to be needed since 24.4
   (defun frame-last-sexp ()
     (interactive)
     (cider-interactive-eval
-      (format    
+      (format
        "(doto (javax.swing.JFrame. \"eval\")
           (.. (getContentPane) (add %s))
           (.pack)
@@ -175,7 +185,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 *** misc
 #+BEGIN_SRC emacs-lisp
-  (defvar clojure-defun-indents '(match))
+  (defvar clojure-defun-indents '(match resize translate rotate scale mirror))
 #+END_SRC
 ** ESS
 *** load
@@ -186,6 +196,19 @@ Annoying, but seems to be needed since 24.4
 *** julia
 #+BEGIN_SRC emacs-lisp
   (setq inferior-julia-program-name "~/bin/julia")
+#+END_SRC
+*** R
+#+BEGIN_SRC emacs-lisp
+  ;; From Martin Maechler <maechler at stat.math.ethz.ch>:
+  (eval-after-load "comint"
+    '(progn
+       (setq comint-scroll-to-bottom-on-output 'others)   ; not current, dflt is nil
+       ;; (setq comint-scroll-show-maximum-output t)      ; I find this too jumpy
+       (define-key comint-mode-map [up]
+         'comint-previous-matching-input-from-input)
+       (define-key comint-mode-map [down]
+         'comint-next-matching-input-from-input)
+       (define-key comint-mode-map "\C-a" 'comint-bol-or-process-mark)))
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
@@ -350,6 +373,7 @@ Annoying, but seems to be needed since 24.4
           (cider . "melpa-stable")
           (company . "gnu")
           (company-ghc . "melpa-stable")
+          (company-cabal . "melpa-stable")
           (clojure-mode . "melpa-stable")
           (flycheck . "melpa-stable")
           (flycheck-haskell . "melpa-stable")
