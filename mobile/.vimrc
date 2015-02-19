@@ -12,6 +12,10 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'scrooloose/syntastic'
 
+" clojure
+Plugin 'guns/vim-clojure-static'
+Plugin 'kien/rainbow_parentheses.vim'
+
 call vundle#end()            " required
 filetype plugin indent on    " required
 
@@ -26,3 +30,9 @@ filetype plugin indent on    " required
 
 " paredit
 au FileType hs call PareditInitBuffer()
+
+" rainbow_parentheses
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
