@@ -42,6 +42,8 @@ alias gpu='git pull'
 alias gcl='git clone'
 
 if status --is-interactive;
-	eval (keychain --eval --agents ssh id_rsa --quiet)
-	[ -e $HOME/.keychain/(hostname)-fish ]; and . $HOME/.keychain/(hostname)-fish
+#	eval (keychain --eval --agents ssh id_rsa --quiet)
+#       [ -e $HOME/.keychain/(hostname)-fish ]; and . $HOME/.keychain/(hostname)-fish
 end
+
+source ~/.config/fish/prompt.fish
