@@ -70,34 +70,11 @@ Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "~/.emacs.d/elpa/auctex-11.87.7")
 #+END_SRC
-** auto-complete
-#+BEGIN_SRC emacs-lisp
-  ;; (defvar ac-ignore-case nil)
-
-  ;; (add-hook 'after-init-hook
-  ;;           (lambda ()
-  ;;             (require 'auto-complete)
-  ;;             (require 'auto-complete-config)
-
-  ;;             (ac-config-default)
-  ;;             (ac-flyspell-workaround)
-
-  ;;             (delete 'clojure-mode ac-modes)
-  ;;             (delete 'haskell-mode ac-modes)
-  ;;             ))
-#+END_SRC
 ** company
 #+BEGIN_SRC emacs-lisp
   (add-hook 'after-init-hook 'global-company-mode)
 #+END_SRC
 ** org
-*** auto-complete
-#+BEGIN_SRC emacs-lisp
-  ;; (eval-after-load "org"
-  ;;   '(progn
-  ;;      (require 'org-ac)
-  ;;      (org-ac/config-default)))
-#+END_SRC
 *** export
 #+BEGIN_SRC emacs-lisp
   (defvar org-export-allow-bind-keywords t)
@@ -367,9 +344,7 @@ Annoying, but seems to be needed since 24.4
   (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 
   (setq package-pinned-packages
-        '((ac-cider . "melpa-stable")
-          (auctex . "gnu")
-          (auto-complete . "melpa-stable")
+        '((auctex . "gnu")
           (cider . "melpa-stable")
           (company . "gnu")
           (company-ghc . "melpa-stable")
