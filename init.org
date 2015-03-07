@@ -155,11 +155,6 @@ Annoying, but seems to be needed since 24.4
        (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
        (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
 #+END_SRC
-*** company
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'cider-repl-mode-hook 'company-mode)
-  (add-hook 'cider-mode-hook 'company-mode)
-#+END_SRC
 *** misc
 #+BEGIN_SRC emacs-lisp
   (defvar clojure-defun-indents '(match resize translate rotate scale mirror))
@@ -226,7 +221,6 @@ Annoying, but seems to be needed since 24.4
   ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
   ;;; company
-  (add-hook 'haskell-mode-hook 'company-mode)
   (custom-set-variables '(company-ghc-show-info t))
   (eval-after-load "company"
     '(progn
