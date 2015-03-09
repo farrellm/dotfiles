@@ -216,9 +216,9 @@ Annoying, but seems to be needed since 24.4
   (custom-set-variables '(haskell-process-type 'cabal-repl))
 
   ;;; ghc-mod
-  ;; (autoload 'ghc-init "ghc" nil t)
-  ;; (autoload 'ghc-debug "ghc" nil t)
-  ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+  (autoload 'ghc-init "ghc" nil t)
+  (autoload 'ghc-debug "ghc" nil t)
+  (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
   ;;; company
   (custom-set-variables '(company-ghc-show-info t))
@@ -234,8 +234,6 @@ Annoying, but seems to be needed since 24.4
 
   (eval-after-load 'haskell-mode
     '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
-
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 #+END_SRC
 ** smartparens
    https://github.com/Fuco1/smartparens/wiki/Example-configuration
@@ -364,6 +362,13 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 
 * miscellaneous
+** local
+#+BEGIN_SRC emacs-lisp
+  (when (file-exists-p "~/.emacs.d/local.el")
+    (load "~/.emacs.d/local"))
+#+END_SRC
+
+** bug fix
 #+BEGIN_SRC emacs-lisp
   (setq x-select-enable-clipboard-manager nil)
 #+END_SRC
