@@ -22,6 +22,15 @@
                 (load-theme 'zenburn))))
 #+END_SRC
 
+** console only
+#+BEGIN_SRC emacs-lisp
+  (unless window-system
+    (add-hook 'after-init-hook
+              (lambda ()
+                (evil-mode 1)
+                (define-key evil-insert-state-map (kbd "M-x") 'execute-extended-command))))
+#+END_SRC
+
 ** It's annoying to have to type 'yes' to answer questions. One letter is enough for confirmation.
 #+BEGIN_SRC emacs-lisp
   (fset 'yes-or-no-p 'y-or-n-p)
@@ -108,6 +117,20 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 
 ** cider
+*** basic configuration
+**** Enable eldoc in Clojure buffers
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'cider-mode-hook #'eldoc-mode)
+#+END_SRC
+**** Log communication with the nREPL server
+#+BEGIN_SRC emacs-lisp
+  (setq nrepl-log-messages t)
+  (setq nrepl-hide-special-buffers t)
+#+END_SRC
+**** Prevent the auto-display of the REPL buffer
+#+BEGIN_SRC emacs-lisp
+  (setq cider-repl-pop-to-buffer-on-connect nil)
+#+END_SRC
 *** keybindings
 #+BEGIN_SRC emacs-lisp
   (defun count-last-sexp ()
@@ -158,6 +181,14 @@ Annoying, but seems to be needed since 24.4
 *** misc
 #+BEGIN_SRC emacs-lisp
   (defvar clojure-defun-indents '(match resize translate rotate scale mirror))
+  (add-hook 'clojure-mode-hook 'typed-clojure-mode)
+
+  (eval-after-load 'flycheck '(flycheck-clojure-setup))
+  (eval-after-load 'flycheck
+    '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
+
+  (add-hook 'clojure-mode-hook (lambda ()
+                                 (clj-refactor-mode 1)))
 #+END_SRC
 ** ESS
 *** load
@@ -191,8 +222,9 @@ Annoying, but seems to be needed since 24.4
   ;;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
 
   ;;; haskell-mode
-  (setenv "PATH" (concat "~/.cabal/bin:" (getenv "PATH")))
-  (add-to-list 'exec-path "~/.cabal/bin")
+  (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
+    (setenv "PATH" (concat my-cabal-path ":" (getenv "PATH")))
+    (add-to-list 'exec-path my-cabal-path))
   (custom-set-variables '(haskell-tags-on-save t))
 
   (custom-set-variables
@@ -216,9 +248,9 @@ Annoying, but seems to be needed since 24.4
   (custom-set-variables '(haskell-process-type 'cabal-repl))
 
   ;;; ghc-mod
-  (autoload 'ghc-init "ghc" nil t)
-  (autoload 'ghc-debug "ghc" nil t)
-  (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+  ;; (autoload 'ghc-init "ghc" nil t)
+  ;; (autoload 'ghc-debug "ghc" nil t)
+  ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
 
   ;;; company
   (custom-set-variables '(company-ghc-show-info t))
@@ -226,11 +258,11 @@ Annoying, but seems to be needed since 24.4
     '(progn
        (add-to-list 'company-backends 'company-ghc)))
 
-  (defvar haskell-font-lock-symbols t)
+  ;; (defvar haskell-font-lock-symbols t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-  ;; (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  (add-hook 'haskell-mode-hook 'structured-haskell-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  ;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
 
   (eval-after-load 'haskell-mode
     '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
@@ -337,28 +369,62 @@ Annoying, but seems to be needed since 24.4
 
   (setq package-pinned-packages
         '((auctex . "gnu")
-          (cider . "melpa-stable")
+
           (company . "gnu")
           (company-ghc . "melpa-stable")
           (company-cabal . "melpa-stable")
+          (company-go . "melpa-stable")
+
+          (cider . "melpa-stable")
           (clojure-mode . "melpa-stable")
+          (clojure-snippets . "melpa-stable")
+          (typed-clojure-mode . "melpa-stable")
+
+          (clojure-cheatsheet . "melpa-stable")
+          (helm . "melpa-stable")
+          (async . "melpa-stable")
+
+          (clj-refactor . "melpa-stable")
+          (paredit . "melpa-stable")
+          (multiple-cursors . "melpa-stable")
+          (s . "melpa-stable")
+
+          (evil . "melpa-stable")
+          (undo-tree . "melpa-stable")
+          (goto-last-change . "melpa-stable")
+
           (flycheck . "melpa-stable")
+          (pkg-info . "melpa-stable")
+          ;; (dash . "melpa-stable")
+          (epl . "melpa-stable")
+
+          ;; (flycheck-clojure . "melpa-stable")
           (flycheck-haskell . "melpa-stable")
+
           (ghc . "melpa-stable")
           (haskell-mode . "melpa-stable")
+          (idris-mode . "melpa-stable")
           (rainbow-delimiters . "melpa-stable")
           (shm . "melpa-stable")
-          (smartparens . "melpa-stable")
-          (zenburn-theme . "melpa-stable")
 
           (markdown-mode . "melpa-stable")
 
-          (async . "melpa-stable")
+          (smartparens . "melpa-stable")
           (dash . "melpa-stable")
-          (epl . "melpa-stable")
-          (helm . "melpa-stable")
-          (pkg-info . "melpa-stable")
-          (popup . "melpa-stable")))
+
+          (stan-mode . "melpa-stable")
+          (stan-snippets . "melpa-stable")
+
+          (zenburn-theme . "melpa-stable")
+
+          ;; company-coq
+          (yasnippet . "melpa-stable")
+
+          ;; company-ess
+          (ess . "melpa-stable")
+
+          ;; 4clojure
+          (request . "melpa-stable")))
 #+END_SRC
 
 * miscellaneous
