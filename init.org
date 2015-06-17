@@ -414,6 +414,7 @@ Annoying, but seems to be needed since 24.4
 
           (stan-mode . "melpa-stable")
           (stan-snippets . "melpa-stable")
+          (auto-complete . "melpa-stable")
 
           (zenburn-theme . "melpa-stable")
 
