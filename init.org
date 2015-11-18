@@ -39,6 +39,7 @@
 ** Ido, which is short for "Interactively Do Things," is an amazingly efficient way to select files and switch buffers.
 #+BEGIN_SRC emacs-lisp
   (ido-mode t)
+  (ido-everywhere t)
 #+END_SRC
 
 ** auto-revert buffers
@@ -66,6 +67,11 @@
   (global-set-key (kbd "C-X C-b") 'ibuffer)
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
+
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; This is your old M-x.
+  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 #+END_SRC
 ** whitespace
 #+BEGIN_SRC emacs-lisp
@@ -77,7 +83,7 @@
 ** auctex
 Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/elpa/auctex-11.87.7")
+  (add-to-list 'load-path "~/.emacs.d/elpa/auctex-11.89")
 #+END_SRC
 ** company
 #+BEGIN_SRC emacs-lisp
@@ -131,6 +137,22 @@ Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
   (setq cider-repl-pop-to-buffer-on-connect nil)
 #+END_SRC
+
+**** SOT mode
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'clojure-mode-hook #'abbrev-mode)
+  (add-hook 'clojure-mode-hook #'speed-of-thought-mode)
+#+END_SRC
+
+**** parens
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/elpa/adjust-parens-3.0")
+  (require 'adjust-parens)
+
+  (add-hook 'clojure-mode-hook #'adjust-parens-mode)
+  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+#+END_SRC
+
 *** keybindings
 #+BEGIN_SRC emacs-lisp
   (defun count-last-sexp ()
@@ -181,14 +203,14 @@ Annoying, but seems to be needed since 24.4
 *** misc
 #+BEGIN_SRC emacs-lisp
   (defvar clojure-defun-indents '(match resize translate rotate scale mirror))
-  (add-hook 'clojure-mode-hook 'typed-clojure-mode)
+  ;; (add-hook 'clojure-mode-hook 'typed-clojure-mode)
 
-  (eval-after-load 'flycheck '(flycheck-clojure-setup))
-  (eval-after-load 'flycheck
-    '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
+  ;; (eval-after-load 'flycheck '(flycheck-clojure-setup))
+  ;; (eval-after-load 'flycheck
+  ;;   '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
 
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (clj-refactor-mode 1)))
+  ;; (add-hook 'clojure-mode-hook (lambda ()
+  ;;                                (clj-refactor-mode 1)))
 #+END_SRC
 ** ESS
 *** load
@@ -198,7 +220,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 *** julia
 #+BEGIN_SRC emacs-lisp
-  (setq inferior-julia-program-name "~/bin/julia")
+  (setq inferior-julia-program-name "/usr/bin/julia")
 #+END_SRC
 *** R
 #+BEGIN_SRC emacs-lisp
@@ -215,7 +237,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'after-init-hook #'global-flycheck-mode)
+  ;; (add-hook 'after-init-hook #'global-flycheck-mode)
 #+END_SRC
 ** haskell
 #+BEGIN_SRC emacs-lisp
@@ -368,7 +390,9 @@ Annoying, but seems to be needed since 24.4
   (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 
   (setq package-pinned-packages
-        '((auctex . "gnu")
+        '((aggressive-indent . "melpa-stable")
+
+          (auctex . "gnu")
 
           (company . "gnu")
           (company-ghc . "melpa-stable")
@@ -385,7 +409,10 @@ Annoying, but seems to be needed since 24.4
           (async . "melpa-stable")
 
           (clj-refactor . "melpa-stable")
+          (edn . "melpa-stable")
+          (helm-core . "melpa-stable")
           (paredit . "melpa-stable")
+          (peg . "melpa-stable")
           (multiple-cursors . "melpa-stable")
           (s . "melpa-stable")
 
@@ -397,6 +424,7 @@ Annoying, but seems to be needed since 24.4
           (pkg-info . "melpa-stable")
           ;; (dash . "melpa-stable")
           (epl . "melpa-stable")
+          (popup . "melpa-stable")
 
           ;; (flycheck-clojure . "melpa-stable")
           (flycheck-haskell . "melpa-stable")
@@ -406,6 +434,15 @@ Annoying, but seems to be needed since 24.4
           (idris-mode . "melpa-stable")
           (rainbow-delimiters . "melpa-stable")
           (shm . "melpa-stable")
+
+          (ido-ubiquitous . "melpa-stable")
+          (ido-completing-read+ . "melpa-stable")
+          (smex . "melpa-stable")
+
+          (magit . "melpa-stable")
+          (git-commit . "melpa-stable")
+          (magit-popup . "melpa-stable")
+          (with-editor . "melpa-stable")
 
           (markdown-mode . "melpa-stable")
 
