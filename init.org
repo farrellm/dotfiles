@@ -449,6 +449,9 @@ Annoying, but seems to be needed since 24.4
           (smartparens . "melpa-stable")
           (dash . "melpa-stable")
 
+          (scala-mode2 . "melpa-stable")
+          (scala-outline-popup . "melpa-stable")
+
           (stan-mode . "melpa-stable")
           (stan-snippets . "melpa-stable")
           (auto-complete . "melpa-stable")
