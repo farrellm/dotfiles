@@ -63,7 +63,7 @@
     (other-window -1))
 
   (global-set-key (kbd "C-x p") 'prev-window)
-  (global-set-key (kbd "C-x x") 'execute-extended-command)
+  (global-set-key (kbd "C-x x") 'smex)
   (global-set-key (kbd "C-X C-b") 'ibuffer)
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
@@ -288,6 +288,11 @@ Annoying, but seems to be needed since 24.4
 
   (eval-after-load 'haskell-mode
     '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
+
+  ;; flycheck
+  (eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
 #+END_SRC
 ** smartparens
    https://github.com/Fuco1/smartparens/wiki/Example-configuration
