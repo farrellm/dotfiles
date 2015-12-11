@@ -150,7 +150,11 @@ Annoying, but seems to be needed since 24.4
   (require 'adjust-parens)
 
   (add-hook 'clojure-mode-hook #'adjust-parens-mode)
+  (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode)
+
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (add-hook 'groovy-mode-hook #'aggressive-indent-mode)
 #+END_SRC
 
 *** keybindings
@@ -213,10 +217,11 @@ Annoying, but seems to be needed since 24.4
   ;;                                (clj-refactor-mode 1)))
 #+END_SRC
 ** ESS
-*** load
+*** autoload
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/ESS/lisp/")
-  (require 'ess-site)
+  (autoload 'R-mode "ess-site" "Major mode for editing R source.
+  See `ess-mode' for more help." t)
+  (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
 #+END_SRC
 *** julia
 #+BEGIN_SRC emacs-lisp
@@ -391,7 +396,7 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 * package management
 #+BEGIN_SRC emacs-lisp
-  (package-initialize)
+  (require 'package)
   ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
