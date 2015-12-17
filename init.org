@@ -429,7 +429,7 @@ Annoying, but seems to be needed since 24.4
           (s . "melpa-stable")
 
           (evil . "melpa-stable")
-          (undo-tree . "melpa-stable")
+          (undo-tree . "gnu")
           (goto-last-change . "melpa-stable")
 
           (flycheck . "melpa-stable")
