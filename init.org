@@ -99,6 +99,12 @@ Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
   (defvar org-startup-indented t)
   (defvar org-src-fontify-natively t)
+  
+  (defun org-babel-invalidate-results ()
+    "invalidated all cached babel results"
+    (interactive)
+    (while (re-search-forward "#\\+RESULTS\\[[[:alnum:]]+\\]" nil t)
+      (replace-match "#+RESULTS[]" nil nil)))
 #+END_SRC
 **** disable evaluation confirmations
 #+BEGIN_SRC emacs-lisp
