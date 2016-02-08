@@ -26,20 +26,20 @@ alias rdesktop-ts2='rdesktop -u mfarrell -d TWOSIGMA -z -g 2048x1500 localhost:7
 
 alias git=hub
 
-alias ga='git add'
-alias gp='git push'
-alias gl='git log'
-alias gs='git status'
-alias gd='git diff --color'
-alias gdc='git diff --cached'
-alias gm='git commit -m'
-alias gma='git commit -am'
-alias gb='git branch'
-alias gc='git checkout'
-alias gra='git remote add'
-alias grr='git remote rm'
-alias gpu='git pull'
-alias gcl='git clone'
+abbr -a ga 'git add'
+abbr -a gp 'git push'
+abbr -a gl 'git log'
+abbr -a gs 'git status'
+abbr -a gd 'git diff --color'
+abbr -a gdc 'git diff --cached'
+abbr -a gm 'git commit -m'
+abbr -a gma 'git commit -am'
+abbr -a gb 'git branch'
+abbr -a gc 'git checkout'
+abbr -a gra 'git remote add'
+abbr -a grr 'git remote rm'
+abbr -a gpu 'git pull'
+abbr -a gcl 'git clone'
 
 if status --is-interactive;
 #	eval (keychain --eval --agents ssh id_rsa --quiet)
