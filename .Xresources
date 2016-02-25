@@ -1,3 +1,11 @@
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
 ! my customisations
 XTerm*faceName: Droid Sans Mono
 XTerm*faceSize: 8
