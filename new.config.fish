@@ -3,7 +3,7 @@
 #
 
 setenv EDITOR vim
-setenv PATH ~/bin ~/.cabal/bin $PATH
+setenv PATH ~/bin ~/.local/bin $PATH
 setenv JAVA_HOME /usr/lib/jvm/java-7-openjdk
 
 # If not running interactively, don't do anything
