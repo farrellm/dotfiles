@@ -72,6 +72,8 @@
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
   ;; This is your old M-x.
   (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+  (global-set-key (kbd "C-<tab>") 'company-complete-common-or-cycle)
 #+END_SRC
 ** whitespace
 #+BEGIN_SRC emacs-lisp
@@ -88,6 +90,7 @@ Annoying, but seems to be needed since 24.4
 ** company
 #+BEGIN_SRC emacs-lisp
   (add-hook 'after-init-hook 'global-company-mode)
+  ;; (setq company-tooltip-align-annotations t)
 #+END_SRC
 ** org
 *** export
@@ -255,9 +258,6 @@ Annoying, but seems to be needed since 24.4
   ;;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
 
   ;;; haskell-mode
-  (let ((my-cabal-path (expand-file-name "~/.cabal/bin")))
-    (setenv "PATH" (concat my-cabal-path ":" (getenv "PATH")))
-    (add-to-list 'exec-path my-cabal-path))
   (custom-set-variables '(haskell-tags-on-save t))
 
   (custom-set-variables
@@ -278,20 +278,19 @@ Annoying, but seems to be needed since 24.4
     (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
     (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
 
-  (custom-set-variables '(haskell-process-type 'ghci)
+  (custom-set-variables '(haskell-process-type 'stack-ghci)
                         '(haskell-process-path-ghci "stack")
                         '(haskell-process-args-ghci '("ghci" "--with-ghc=ghci")))
 
   ;;; ghc-mod
-  ;; (autoload 'ghc-init "ghc" nil t)
-  ;; (autoload 'ghc-debug "ghc" nil t)
-  ;; (add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+  (autoload 'ghc-init "ghc" nil t)
+  (autoload 'ghc-debug "ghc" nil t)
+  (add-hook 'haskell-mode-hook #'ghc-init)
 
   ;;; company
   (custom-set-variables '(company-ghc-show-info t))
   (eval-after-load "company"
-    '(progn
-       (add-to-list 'company-backends 'company-ghc)))
+    '(add-to-list 'company-backends 'company-ghc))
 
   ;; (defvar haskell-font-lock-symbols t)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
@@ -303,9 +302,20 @@ Annoying, but seems to be needed since 24.4
     '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
 
   ;; flycheck
-  (eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-haskell-setup))
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
+  (add-hook 'haskell-mode-hook #'flycheck-mode)
+#+END_SRC
+** rust
+#+BEGIN_SRC emacs-lisp
+  ;; flycheck
+  (eval-after-load 'rust-mode '(require 'cl))
+  (add-hook 'rust-mode-hook #'flycheck-rust-setup)
+  (add-hook 'rust-mode-hook #'flycheck-mode)
+
+  ;; racer
+  (setq racer-rust-src-path "/usr/src/rust/src/")
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
 #+END_SRC
 ** smartparens
    https://github.com/Fuco1/smartparens/wiki/Example-configuration
