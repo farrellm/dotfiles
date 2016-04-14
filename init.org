@@ -2,6 +2,93 @@
 #+AUTHOR: Matthew Farrell
 #+EMAIL: farrellm@alum.mit.edu
 
+* package management
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
+  (setq package-pinned-packages
+        '((aggressive-indent . "melpa-stable")
+
+          (auctex . "gnu")
+
+          (company . "gnu")
+          (company-ghc . "melpa-stable")
+          (company-cabal . "melpa-stable")
+          (company-go . "melpa-stable")
+
+          (cider . "melpa-stable")
+          (clojure-mode . "melpa-stable")
+          (clojure-snippets . "melpa-stable")
+          (typed-clojure-mode . "melpa-stable")
+
+          (clojure-cheatsheet . "melpa-stable")
+          (helm . "melpa-stable")
+          (async . "melpa-stable")
+
+          (clj-refactor . "melpa-stable")
+          (edn . "melpa-stable")
+          (helm-core . "melpa-stable")
+          (paredit . "melpa-stable")
+          (peg . "melpa-stable")
+          (multiple-cursors . "melpa-stable")
+          (s . "melpa-stable")
+
+          (evil . "melpa-stable")
+          (undo-tree . "gnu")
+          (goto-last-change . "melpa-stable")
+
+          (flycheck . "melpa-stable")
+          (pkg-info . "melpa-stable")
+          ;; (dash . "melpa-stable")
+          (epl . "melpa-stable")
+          (popup . "melpa-stable")
+
+          ;; (flycheck-clojure . "melpa-stable")
+          (flycheck-haskell . "melpa-stable")
+
+          (ghc . "melpa-stable")
+          (haskell-mode . "melpa-stable")
+          (idris-mode . "melpa-stable")
+          (rainbow-delimiters . "melpa-stable")
+          (shm . "melpa-stable")
+
+          (ido-ubiquitous . "melpa-stable")
+          (ido-completing-read+ . "melpa-stable")
+          (smex . "melpa-stable")
+
+          (magit . "melpa-stable")
+          (git-commit . "melpa-stable")
+          (magit-popup . "melpa-stable")
+          (with-editor . "melpa-stable")
+
+          (markdown-mode . "melpa-stable")
+
+          (smartparens . "melpa-stable")
+          (dash . "melpa-stable")
+
+          (scala-mode2 . "melpa-stable")
+          (scala-outline-popup . "melpa-stable")
+
+          (stan-mode . "melpa-stable")
+          (stan-snippets . "melpa-stable")
+          (auto-complete . "melpa-stable")
+
+          (zenburn-theme . "melpa-stable")
+
+          ;; company-coq
+          (yasnippet . "melpa-stable")
+
+          ;; company-ess
+          (ess . "melpa-stable")
+          (julia-mode . "melpa-stable")
+
+          ;; 4clojure
+          (request . "melpa-stable")))
+#+END_SRC
+
 * basic ui
 ** common
 #+BEGIN_SRC emacs-lisp
@@ -93,6 +180,11 @@ Annoying, but seems to be needed since 24.4
   ;; (setq company-tooltip-align-annotations t)
 #+END_SRC
 ** org
+*** misc
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
 *** export
 #+BEGIN_SRC emacs-lisp
   (defvar org-export-allow-bind-keywords t)
@@ -102,7 +194,7 @@ Annoying, but seems to be needed since 24.4
 #+BEGIN_SRC emacs-lisp
   (defvar org-startup-indented t)
   (defvar org-src-fontify-natively t)
-  
+
   (defun org-babel-invalidate-results ()
     "invalidated all cached babel results"
     (interactive)
@@ -162,8 +254,10 @@ Annoying, but seems to be needed since 24.4
   (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode)
 
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'groovy-mode-hook #'aggressive-indent-mode)
+
+  ;; nice, but has caused problems
+  ;; (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
 #+END_SRC
 
 *** keybindings
@@ -238,6 +332,8 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 *** R
 #+BEGIN_SRC emacs-lisp
+  (add-hook 'R-mode-hook 'flycheck-mode)
+
   ;; From Martin Maechler <maechler at stat.math.ethz.ch>:
   (eval-after-load "comint"
     '(progn
@@ -270,24 +366,22 @@ Annoying, but seems to be needed since 24.4
     (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
     (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
     (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
-    (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
-    (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
+    (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
   (eval-after-load 'haskell-cabal '(progn
     (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
     (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
     (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
     (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
 
-  (custom-set-variables '(haskell-process-type 'stack-ghci)
-                        '(haskell-process-path-ghci "stack")
-                        '(haskell-process-args-ghci '("ghci" "--with-ghc=ghci")))
+  (custom-set-variables '(haskell-process-type 'stack-ghci))
 
   ;;; ghc-mod
   (autoload 'ghc-init "ghc" nil t)
   (autoload 'ghc-debug "ghc" nil t)
   (add-hook 'haskell-mode-hook #'ghc-init)
+  (setq ghc-report-errors nil)
 
-  ;;; company
+  ;;; Company
   (custom-set-variables '(company-ghc-show-info t))
   (eval-after-load "company"
     '(add-to-list 'company-backends 'company-ghc))
@@ -410,92 +504,6 @@ Annoying, but seems to be needed since 24.4
        (define-key sp-keymap (kbd "s-s j") 'sp-join-sexp)
        (define-key sp-keymap (kbd "s-s s") 'sp-split-sexp)))
 #+END_SRC
-* package management
-#+BEGIN_SRC emacs-lisp
-  (require 'package)
-  ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
-  (add-to-list 'package-archives '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
-
-  (setq package-pinned-packages
-        '((aggressive-indent . "melpa-stable")
-
-          (auctex . "gnu")
-
-          (company . "gnu")
-          (company-ghc . "melpa-stable")
-          (company-cabal . "melpa-stable")
-          (company-go . "melpa-stable")
-
-          (cider . "melpa-stable")
-          (clojure-mode . "melpa-stable")
-          (clojure-snippets . "melpa-stable")
-          (typed-clojure-mode . "melpa-stable")
-
-          (clojure-cheatsheet . "melpa-stable")
-          (helm . "melpa-stable")
-          (async . "melpa-stable")
-
-          (clj-refactor . "melpa-stable")
-          (edn . "melpa-stable")
-          (helm-core . "melpa-stable")
-          (paredit . "melpa-stable")
-          (peg . "melpa-stable")
-          (multiple-cursors . "melpa-stable")
-          (s . "melpa-stable")
-
-          (evil . "melpa-stable")
-          (undo-tree . "gnu")
-          (goto-last-change . "melpa-stable")
-
-          (flycheck . "melpa-stable")
-          (pkg-info . "melpa-stable")
-          ;; (dash . "melpa-stable")
-          (epl . "melpa-stable")
-          (popup . "melpa-stable")
-
-          ;; (flycheck-clojure . "melpa-stable")
-          (flycheck-haskell . "melpa-stable")
-
-          (ghc . "melpa-stable")
-          (haskell-mode . "melpa-stable")
-          (idris-mode . "melpa-stable")
-          (rainbow-delimiters . "melpa-stable")
-          (shm . "melpa-stable")
-
-          (ido-ubiquitous . "melpa-stable")
-          (ido-completing-read+ . "melpa-stable")
-          (smex . "melpa-stable")
-
-          (magit . "melpa-stable")
-          (git-commit . "melpa-stable")
-          (magit-popup . "melpa-stable")
-          (with-editor . "melpa-stable")
-
-          (markdown-mode . "melpa-stable")
-
-          (smartparens . "melpa-stable")
-          (dash . "melpa-stable")
-
-          (scala-mode2 . "melpa-stable")
-          (scala-outline-popup . "melpa-stable")
-
-          (stan-mode . "melpa-stable")
-          (stan-snippets . "melpa-stable")
-          (auto-complete . "melpa-stable")
-
-          (zenburn-theme . "melpa-stable")
-
-          ;; company-coq
-          (yasnippet . "melpa-stable")
-
-          ;; company-ess
-          (ess . "melpa-stable")
-
-          ;; 4clojure
-          (request . "melpa-stable")))
-#+END_SRC
-
 * miscellaneous
 ** local
 #+BEGIN_SRC emacs-lisp
