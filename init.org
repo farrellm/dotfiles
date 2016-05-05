@@ -169,6 +169,7 @@
 #+END_SRC
 
 ** backups
+https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (setq
    backup-by-copying t      ; don't clobber symlinks
