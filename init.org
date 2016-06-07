@@ -50,7 +50,8 @@
           (flycheck-haskell . "melpa-stable")
 
           (ghc . "melpa-stable")
-          (haskell-mode . "melpa-stable")
+          ;; (haskell-mode . "melpa-stable")
+          (hindent-mode . "melpa-stable")
           (idris-mode . "melpa-stable")
           (rainbow-delimiters . "melpa-stable")
           (shm . "melpa-stable")
@@ -364,53 +365,11 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 ** haskell
 #+BEGIN_SRC emacs-lisp
-  ;;; https://github.com/serras/emacs-haskell-tutorial/blob/master/tutorial.md
+  (add-hook 'haskell-mode-hook 'intero-mode)
 
-  ;;; haskell-mode
-  (custom-set-variables '(haskell-tags-on-save t))
-
-  (custom-set-variables
-    '(haskell-process-suggest-remove-import-lines t)
-    '(haskell-process-auto-import-loaded-modules t)
-    '(haskell-process-log t))
-  (eval-after-load 'haskell-mode '(progn
-    (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-    (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
-    (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
-    (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
-    (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
-    (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)))
-  (eval-after-load 'haskell-cabal '(progn
-    (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
-    (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
-    (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
-    (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
-
-  (custom-set-variables '(haskell-process-type 'stack-ghci))
-
-  ;;; ghc-mod
-  (autoload 'ghc-init "ghc" nil t)
-  (autoload 'ghc-debug "ghc" nil t)
-  (add-hook 'haskell-mode-hook #'ghc-init)
-  (setq ghc-report-errors nil)
-
-  ;;; Company
-  (custom-set-variables '(company-ghc-show-info t))
-  (eval-after-load "company"
-    '(add-to-list 'company-backends 'company-ghc))
-
-  ;; (defvar haskell-font-lock-symbols t)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-decl-scan)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-  ;; (add-hook 'haskell-mode-hook 'structured-haskell-mode)
-
-  (eval-after-load 'haskell-mode
-    '(define-key haskell-mode-map [f8] 'haskell-navigate-imports))
-
-  ;; flycheck
-  (add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
-  (add-hook 'haskell-mode-hook #'flycheck-mode)
+  ;; hindent
+  (add-hook 'haskell-mode-hook 'hindent-mode)
+  (custom-set-variables '(hindent-style "chris-done"))
 #+END_SRC
 ** rust
 #+BEGIN_SRC emacs-lisp
