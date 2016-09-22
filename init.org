@@ -296,7 +296,7 @@ Annoying, but seems to be needed since 24.4
   (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode)
 
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-  (add-hook 'groovy-mode-hook #'aggressive-indent-mode)
+  ;; (add-hook 'groovy-mode-hook #'aggressive-indent-mode)
 
   ;; nice, but has caused problems
   ;; (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
