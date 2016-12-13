@@ -9,6 +9,28 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
+  (setq package-selected-packages
+        '(adjust-parens
+          aggressive-indent
+          company
+          evil
+          flycheck
+          ido-ubiquitous
+          org
+          smartparens
+          smex
+
+          auctex
+          cider
+          ess
+          fish-mode
+          hindent
+          idris-mode
+          intero
+          julia-mode
+
+          zenburn-theme))
+
   (setq package-pinned-packages
         '((aggressive-indent . "melpa-stable")
 
@@ -405,10 +427,7 @@ Annoying, but seems to be needed since 24.4
 ** haskell
 #+BEGIN_SRC emacs-lisp
   (add-hook 'haskell-mode-hook 'intero-mode)
-
-  ;; hindent
   (add-hook 'haskell-mode-hook 'hindent-mode)
-  (custom-set-variables '(hindent-style "chris-done"))
 #+END_SRC
 ** rust
 #+BEGIN_SRC emacs-lisp
@@ -421,6 +440,10 @@ Annoying, but seems to be needed since 24.4
   (setq racer-rust-src-path "/usr/src/rust/src/")
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
+#+END_SRC
+** scala
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'ensime-mode-hook 'flycheck-mode)
 #+END_SRC
 ** smartparens
    https://github.com/Fuco1/smartparens/wiki/Example-configuration
