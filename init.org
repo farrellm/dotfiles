@@ -16,14 +16,18 @@
           evil
           flycheck
           ido-ubiquitous
+          magit
           org
+          rainbow-delimiters
           smartparens
           smex
 
           auctex
           cider
+          ensime
           ess
           fish-mode
+          groovy-mode
           hindent
           idris-mode
           intero
