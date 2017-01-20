@@ -10,10 +10,13 @@
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
   (setq package-selected-packages
-        '(adjust-parens
+	'(adjust-parens
           aggressive-indent
           company
           evil
+          evil-leader
+          evil-org
+          evil-smartparens
           flycheck
           ido-ubiquitous
           magit
@@ -33,10 +36,11 @@
           intero
           julia-mode
 
+          color-theme-sanityinc-tomorrow
           zenburn-theme))
 
   (setq package-pinned-packages
-        '((aggressive-indent . "melpa-stable")
+	'((aggressive-indent . "melpa-stable")
 
           (auctex . "gnu")
 
@@ -65,6 +69,9 @@
           (evil . "melpa-stable")
           (undo-tree . "gnu")
           (goto-last-change . "melpa-stable")
+          (evil-org . "melpa-stable")
+          (evil-leader . "melpa-stable")
+          (evil-smartparens . "melpa-stable")
 
           (flycheck . "melpa-stable")
           (pkg-info . "melpa-stable")
@@ -103,6 +110,7 @@
           (stan-snippets . "melpa-stable")
           (auto-complete . "melpa-stable")
 
+          (color-theme-sanityinc-tomorrow . "melpa-stable")
           (zenburn-theme . "melpa-stable")
 
           ;; company-coq
@@ -123,17 +131,17 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+  (setq ad-redefinition-action 'accept)
+
+  (add-hook 'after-init-hook
+	    (lambda () (load-theme 'sanityinc-tomorrow-night)))
 #+END_SRC
 
 ** window only
 #+BEGIN_SRC emacs-lisp
   (when window-system
     (blink-cursor-mode 0)
-    (setq-default cursor-type 'bar)
-
-    (add-hook 'after-init-hook
-              (lambda ()
-                (load-theme 'zenburn))))
+    (setq-default cursor-type 'bar))
 #+END_SRC
 
 ** console only
@@ -292,14 +300,13 @@ Annoying, but seems to be needed since 24.4
 **** load languages
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "~/.emacs.d/ob-julia")
-  (eval-after-load "org"
-    '(progn
-       (org-babel-do-load-languages
-        'org-babel-load-languages
-        '((emacs-lisp . t)
-          (haskell . t)
-          (julia . t)
-          (R . t)))))
+  (with-eval-after-load "org"
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (haskell . t)
+       (julia . t)
+       (R . t))))
 #+END_SRC
 
 ** cider
@@ -342,14 +349,14 @@ Annoying, but seems to be needed since 24.4
 *** keybindings
 #+BEGIN_SRC emacs-lisp
   (defun count-last-sexp ()
-         (interactive)
-         (cider-interactive-eval
+	 (interactive)
+	 (cider-interactive-eval
            (format "(count %s)"
                    (cider-last-sexp))))
 
   (defun nth-from-last-sexp (n)
-         (interactive "p")
-         (cider-interactive-eval
+	 (interactive "p")
+	 (cider-interactive-eval
            (format "(nth %s %s)"
                    (cider-last-sexp) n)))
 
@@ -357,9 +364,9 @@ Annoying, but seems to be needed since 24.4
     (interactive)
     (cider-interactive-eval
       (format
-        "(require 'scad-clj.scad)
-         (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
-        (cider-last-sexp))))
+	"(require 'scad-clj.scad)
+	 (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
+	(cider-last-sexp))))
 
   (defun frame-last-sexp ()
     (interactive)
@@ -378,13 +385,12 @@ Annoying, but seems to be needed since 24.4
                (criterium.core/quick-benchmark %s)"
               (cider-last-sexp))))
 
-  (eval-after-load "cider"
-    '(progn
-       (define-key cider-mode-map (kbd "C-c c") 'count-last-sexp)
-       (define-key cider-mode-map (kbd "C-c n") `nth-from-last-sexp)
-       (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
-       (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
-       (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp)))
+  (with-eval-after-load "cider"
+    (define-key cider-mode-map (kbd "C-c c") 'count-last-sexp)
+    (define-key cider-mode-map (kbd "C-c n") `nth-from-last-sexp)
+    (define-key cider-mode-map (kbd "C-c 3") 'spit-scad-last-sexp)
+    (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
+    (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp))
 #+END_SRC
 *** misc
 #+BEGIN_SRC emacs-lisp
@@ -414,15 +420,14 @@ Annoying, but seems to be needed since 24.4
   (add-hook 'R-mode-hook 'flycheck-mode)
 
   ;; From Martin Maechler <maechler at stat.math.ethz.ch>:
-  (eval-after-load "comint"
-    '(progn
-       (setq comint-scroll-to-bottom-on-output 'others)   ; not current, dflt is nil
-       ;; (setq comint-scroll-show-maximum-output t)      ; I find this too jumpy
-       (define-key comint-mode-map [up]
-         'comint-previous-matching-input-from-input)
-       (define-key comint-mode-map [down]
-         'comint-next-matching-input-from-input)
-       (define-key comint-mode-map "\C-a" 'comint-bol-or-process-mark)))
+  (with-eval-after-load "comint"
+    (setq comint-scroll-to-bottom-on-output 'others)   ; not current, dflt is nil
+    ;; (setq comint-scroll-show-maximum-output t)      ; I find this too jumpy
+    (define-key comint-mode-map [up]
+      'comint-previous-matching-input-from-input)
+    (define-key comint-mode-map [down]
+      'comint-next-matching-input-from-input)
+    (define-key comint-mode-map "\C-a" 'comint-bol-or-process-mark))
 #+END_SRC
 ** flycheck
 #+BEGIN_SRC emacs-lisp
@@ -435,15 +440,16 @@ Annoying, but seems to be needed since 24.4
 #+END_SRC
 ** rust
 #+BEGIN_SRC emacs-lisp
-  ;; flycheck
-  (eval-after-load 'rust-mode '(require 'cl))
-  (add-hook 'rust-mode-hook #'flycheck-rust-setup)
-  (add-hook 'rust-mode-hook #'flycheck-mode)
+   ;; flycheck
+   (with-eval-after-load 'rust-mode
+     (require 'cl))
+   (add-hook 'rust-mode-hook #'flycheck-rust-setup)
+   (add-hook 'rust-mode-hook #'flycheck-mode)
 
-  ;; racer
-  (setq racer-rust-src-path "/usr/src/rust/src/")
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
+   ;; racer
+   (setq racer-rust-src-path "/usr/src/rust/src/")
+   (add-hook 'rust-mode-hook #'racer-mode)
+   (add-hook 'racer-mode-hook #'eldoc-mode)
 #+END_SRC
 ** scala
 #+BEGIN_SRC emacs-lisp
@@ -452,95 +458,93 @@ Annoying, but seems to be needed since 24.4
 ** smartparens
    https://github.com/Fuco1/smartparens/wiki/Example-configuration
 #+BEGIN_SRC emacs-lisp
-  (eval-after-load "smartparens-autoloads"
-    '(progn
-       (require 'smartparens-config)
-       (smartparens-global-mode t)
-       (smartparens-global-strict-mode t)
+  (with-eval-after-load "smartparens-autoloads"
+    (require 'smartparens-config)
+    (smartparens-global-mode t)
+    (smartparens-global-strict-mode t)
 
-       ;; highlights matching pairs
-       (show-smartparens-global-mode t)
+    ;; highlights matching pairs
+    (show-smartparens-global-mode t)
 
-       ;; keybinding management
-       (sp-use-smartparens-bindings)
+    ;; keybinding management
+    (sp-use-smartparens-bindings)
 
-       ;; pair management
-       (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+    ;; pair management
+    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
 
-       ;; markdown-mode
-       (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-         (sp-local-pair "*" "*" :bind "C-*")
-         (sp-local-tag "2" "**" "**")
-         (sp-local-tag "s" "```scheme" "```")
-         (sp-local-tag "<" "<_>" "</_>" :transform 'sp-match-sgml-tags))
+    ;; markdown-mode
+    (sp-with-modes '(markdown-mode gfm-mode rst-mode)
+      (sp-local-pair "*" "*" :bind "C-*")
+      (sp-local-tag "2" "**" "**")
+      (sp-local-tag "s" "```scheme" "```")
+      (sp-local-tag "<" "<_>" "</_>" :transform 'sp-match-sgml-tags))
 
-       ;; tex-mode latex-mode
-       (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
-         (sp-local-tag "i" "\"<" "\">"))
+    ;; tex-mode latex-mode
+    (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
+      (sp-local-tag "i" "\"<" "\">"))
 
-       ;; html-mode
-       (sp-with-modes '(html-mode sgml-mode)
-         (sp-local-pair "<" ">"))
+    ;; html-mode
+    (sp-with-modes '(html-mode sgml-mode)
+      (sp-local-pair "<" ">"))
 
-       ;; lisp modes
-       (sp-with-modes sp--lisp-modes
-         (sp-local-pair "(" nil :bind "C-("))
+    ;; lisp modes
+    (sp-with-modes sp--lisp-modes
+      (sp-local-pair "(" nil :bind "C-("))
 
-       (require 'smartparens-latex)
-       ))
+    (require 'smartparens-latex)
+    )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   ;;; keybinding management
-  (eval-after-load "smartparens-autoloads"
-    '(progn
-       (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
-       (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+  (with-eval-after-load "smartparens-autoloads"
+    (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+    (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
 
-       (define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
-       (define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
-       ;; (define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
-       ;; (define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+    (define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+    (define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+    ;; (define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+    ;; (define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
 
-       (define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
-       (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
-       (define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
-       (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+    (define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+    (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+    (define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+    (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
 
-       (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
-       (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+    (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+    (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
 
-       (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
-       (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+    (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+    (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
 
-       (define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
-       (define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+    (define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
+    (define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
 
-       (define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
-       (define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
-       (define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-       (define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+    (define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
+    (define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
+    (define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+    (define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
 
-       (define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
-       (define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
-       (define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
-       (define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+    (define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+    (define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+    (define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+    (define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
 
-       (define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
-       (define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
-       (define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+    (define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+    (define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+    (define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
 
-       (define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
-       (define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+    (define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+    (define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
 
-       (define-key sp-keymap (kbd "s-t") 'sp-prefix-tag-object)
-       (define-key sp-keymap (kbd "s-p") 'sp-prefix-pair-object)
-       (define-key sp-keymap (kbd "s-s c") 'sp-convolute-sexp)
-       (define-key sp-keymap (kbd "s-s a") 'sp-absorb-sexp)
-       (define-key sp-keymap (kbd "s-s e") 'sp-emit-sexp)
-       (define-key sp-keymap (kbd "s-s p") 'sp-add-to-previous-sexp)
-       (define-key sp-keymap (kbd "s-s n") 'sp-add-to-next-sexp)
-       (define-key sp-keymap (kbd "s-s j") 'sp-join-sexp)
-       (define-key sp-keymap (kbd "s-s s") 'sp-split-sexp)))
+    (define-key sp-keymap (kbd "s-t") 'sp-prefix-tag-object)
+    (define-key sp-keymap (kbd "s-p") 'sp-prefix-pair-object)
+    (define-key sp-keymap (kbd "s-s c") 'sp-convolute-sexp)
+    (define-key sp-keymap (kbd "s-s a") 'sp-absorb-sexp)
+    (define-key sp-keymap (kbd "s-s e") 'sp-emit-sexp)
+    (define-key sp-keymap (kbd "s-s p") 'sp-add-to-previous-sexp)
+    (define-key sp-keymap (kbd "s-s n") 'sp-add-to-next-sexp)
+    (define-key sp-keymap (kbd "s-s j") 'sp-join-sexp)
+    (define-key sp-keymap (kbd "s-s s") 'sp-split-sexp))
 #+END_SRC
 * miscellaneous
 ** local
