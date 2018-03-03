@@ -3,138 +3,75 @@
 #+EMAIL: farrellm@alum.mit.edu
 
 * package management
+** initialization
 #+BEGIN_SRC emacs-lisp
   (require 'package)
+  (setq package-enable-at-startup nil)
+
   ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
-  (setq package-selected-packages
-	'(adjust-parens
-          aggressive-indent
-          company
-          evil
-          evil-leader
-          evil-org
-          evil-smartparens
-          flycheck
-          ido-ubiquitous
-          magit
-          org
-          rainbow-delimiters
-          smartparens
-          smex
-
-          auctex
-          cider
-          ensime
-          ess
-          fish-mode
-          groovy-mode
-          hindent
-          idris-mode
-          intero
-          julia-mode
-
-          color-theme-sanityinc-tomorrow
-          zenburn-theme))
-
-  (setq package-pinned-packages
-	'((aggressive-indent . "melpa-stable")
-
-          (auctex . "gnu")
-
-          (company . "gnu")
-          (company-ghc . "melpa-stable")
-          (company-cabal . "melpa-stable")
-          (company-go . "melpa-stable")
-
-          (cider . "melpa-stable")
-          (clojure-mode . "melpa-stable")
-          (clojure-snippets . "melpa-stable")
-          (typed-clojure-mode . "melpa-stable")
-
-          (clojure-cheatsheet . "melpa-stable")
-          (helm . "melpa-stable")
-          (async . "melpa-stable")
-
-          (clj-refactor . "melpa-stable")
-          (edn . "melpa-stable")
-          (helm-core . "melpa-stable")
-          (paredit . "melpa-stable")
-          (peg . "melpa-stable")
-          (multiple-cursors . "melpa-stable")
-          (s . "melpa-stable")
-
-          (evil . "melpa-stable")
-          (undo-tree . "gnu")
-          (goto-last-change . "melpa-stable")
-          (evil-org . "melpa-stable")
-          (evil-leader . "melpa-stable")
-          (evil-smartparens . "melpa-stable")
-
-          (flycheck . "melpa-stable")
-          (pkg-info . "melpa-stable")
-          ;; (dash . "melpa-stable")
-          (epl . "melpa-stable")
-          (popup . "melpa-stable")
-
-          ;; (flycheck-clojure . "melpa-stable")
-          (flycheck-haskell . "melpa-stable")
-
-          (ghc . "melpa-stable")
-          ;; (haskell-mode . "melpa-stable")
-          (hindent-mode . "melpa-stable")
-          (idris-mode . "melpa-stable")
-          (rainbow-delimiters . "melpa-stable")
-          (shm . "melpa-stable")
-
-          (ido-ubiquitous . "melpa-stable")
-          (ido-completing-read+ . "melpa-stable")
-          (smex . "melpa-stable")
-
-          (magit . "melpa-stable")
-          (git-commit . "melpa-stable")
-          (magit-popup . "melpa-stable")
-          (with-editor . "melpa-stable")
-
-          (markdown-mode . "melpa-stable")
-
-          (smartparens . "melpa-stable")
-          (dash . "melpa-stable")
-
-          (scala-mode2 . "melpa-stable")
-          (scala-outline-popup . "melpa-stable")
-
-          (stan-mode . "melpa-stable")
-          (stan-snippets . "melpa-stable")
-          (auto-complete . "melpa-stable")
-
-          (color-theme-sanityinc-tomorrow . "melpa-stable")
-          (zenburn-theme . "melpa-stable")
-
-          ;; company-coq
-          (yasnippet . "melpa-stable")
-
-          ;; company-ess
-          (ess . "melpa-stable")
-          (julia-mode . "melpa-stable")
-
-          ;; 4clojure
-          (request . "melpa-stable")))
+  (package-initialize)
 #+END_SRC
 
-* basic ui
+** use-package
+http://cachestocaches.com/2015/8/getting-started-use-package/
+#+BEGIN_SRC emacs-lisp
+  (setq use-package-always-defer t)
+  (setq use-package-always-ensure t)
+  (setq use-package-always-pin "melpa-stable")
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package)
+    (package-install 'diminish)
+    (package-install 'bind-key))
+
+  (eval-when-compile
+    (require 'use-package))
+  (require 'diminish)
+  (require 'bind-key)
+
+
+  (setq package-pinned-packages
+        '((dash . "melpa-stable")
+          (epl . "melpa-stable")
+          (f . "melpa-stable")
+          (find-file-in-project . "melpa-stable")
+          (flx . "melpa-stable")
+          (goto-chg . "melpa-stable")
+          (haskell-mode . "melpa-stable")
+          (highlight-indentation . "melpa-stable")
+          (ivy . "melpa-stable")
+          (pkg-info . "melpa-stable")
+          (popup . "melpa-stable")
+          (pyvenv . "melpa-stable")
+          (s . "melpa-stable")
+          (sbt-mode . "melpa-stable")
+          (scala-mode . "melpa-stable")
+          (yasnippet . "melpa-stable")
+          ))
+#+END_SRC
+
+* basic
+** benchmark
+#+BEGIN_SRC emacs-lisp
+  (use-package benchmark-init
+    :disabled t
+    :demand t
+    :config
+    ;; To disable collection of benchmark data after init is done.
+    (add-hook 'after-init-hook 'benchmark-init/deactivate))
+#+END_SRC
+
 ** common
 #+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (setq ad-redefinition-action 'accept)
-
-  (add-hook 'after-init-hook
-	    (lambda () (load-theme 'sanityinc-tomorrow-night)))
 #+END_SRC
 
 ** window only
@@ -142,15 +79,16 @@
   (when window-system
     (blink-cursor-mode 0)
     (setq-default cursor-type 'bar))
+
+  (use-package color-theme-sanityinc-tomorrow
+    :if window-system
+    :init
+    (add-hook 'after-init-hook (lambda () (load-theme 'sanityinc-tomorrow-night t))))
 #+END_SRC
 
 ** console only
 #+BEGIN_SRC emacs-lisp
-  (unless window-system
-    (add-hook 'after-init-hook
-              (lambda ()
-                (evil-mode 1)
-                (define-key evil-insert-state-map (kbd "M-x") 'execute-extended-command))))
+  ;; (unless window-system)
 #+END_SRC
 
 ** It's annoying to have to type 'yes' to answer questions. One letter is enough for confirmation.
@@ -160,23 +98,43 @@
 
 ** Ido, which is short for "Interactively Do Things," is an amazingly efficient way to select files and switch buffers.
 #+BEGIN_SRC emacs-lisp
-  (ido-mode t)
-  (ido-everywhere t)
+  (ido-mode 1)
+  (ido-everywhere 1)
+
+  (use-package ido-completing-read+
+    :demand t
+    :config (ido-ubiquitous-mode 1))
+
+  (use-package flx-ido
+    :demand t
+    :init
+    ;; disable ido faces to see flx highlights.
+    (setq ido-enable-flex-matching t)
+    (setq ido-use-faces nil)
+    :config
+    (flx-ido-mode 1))
+
+  (use-package smex
+    :demand t
+    :config (smex-initialize))
 #+END_SRC
 
 ** auto-revert buffers
 #+BEGIN_SRC emacs-lisp
   (global-auto-revert-mode t)
 #+END_SRC
+
 ** parenthesis highlight
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode t)
   (set-face-foreground 'show-paren-match "white")
 #+END_SRC
+
 ** follow symlinks to version controlled files
 #+BEGIN_SRC emacs-lisp
   (setq vc-follow-symlinks nil)
 #+END_SRC
+
 ** global keybindings
 #+BEGIN_SRC emacs-lisp
   (defun prev-window ()
@@ -236,9 +194,10 @@
 
   (global-set-key (kbd "C-<tab>") 'company-complete-common-or-cycle)
 #+END_SRC
+
 ** whitespace
 #+BEGIN_SRC emacs-lisp
-  (setq indent-tabs-mode nil)
+  (setq-default indent-tabs-mode nil)
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
@@ -256,107 +215,45 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+END_SRC
 
 * packages
-** auctex
-Annoying, but seems to be needed since 24.4
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/elpa/auctex-11.89")
-#+END_SRC
 ** company
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'after-init-hook 'global-company-mode)
-  ;; (setq company-tooltip-align-annotations t)
-#+END_SRC
-** org
-*** misc
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook 'auto-fill-mode)
-  (add-hook 'org-mode-hook 'flyspell-mode)
-#+END_SRC
-*** export
-#+BEGIN_SRC emacs-lisp
-  (defvar org-export-allow-bind-keywords t)
-#+END_SRC
-*** babel
-**** misc
-#+BEGIN_SRC emacs-lisp
-  (defvar org-startup-indented t)
-  (defvar org-src-fontify-natively t)
+  (use-package company
+    :demand t
+    :init (setq company-idle-delay 0.1)
+    :config (global-company-mode))
 
-  (defun org-babel-invalidate-results ()
-    "invalidated all cached babel results"
-    (interactive)
-    (while (re-search-forward "#\\+RESULTS\\[[[:alnum:]]+\\]" nil t)
-      (replace-match "#+RESULTS[]" nil nil)))
-#+END_SRC
-**** disable evaluation confirmations
-#+BEGIN_SRC emacs-lisp
-  (defvar org-confirm-babel-evaluate nil)
-#+END_SRC
-**** inline images
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-  (add-hook 'org-mode-hook 'org-display-inline-images)
-#+END_SRC
-**** load languages
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/ob-julia")
-  (with-eval-after-load "org"
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((emacs-lisp . t)
-       (haskell . t)
-       (julia . t)
-       (R . t))))
+  (use-package company-flx
+    :demand t
+    :pin melpa
+    :config (company-flx-mode +1))
 #+END_SRC
 
-** cider
-*** basic configuration
-**** Enable eldoc in Clojure buffers
+** clojure
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'cider-mode-hook #'eldoc-mode)
-#+END_SRC
-**** Log communication with the nREPL server
-#+BEGIN_SRC emacs-lisp
-  (setq nrepl-log-messages t)
-  (setq nrepl-hide-special-buffers t)
-#+END_SRC
-**** Prevent the auto-display of the REPL buffer
-#+BEGIN_SRC emacs-lisp
-  (setq cider-repl-pop-to-buffer-on-connect nil)
-#+END_SRC
+  (use-package clojure-mode)
 
-**** SOT mode
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'clojure-mode-hook #'abbrev-mode)
-  (add-hook 'clojure-mode-hook #'speed-of-thought-mode)
-#+END_SRC
-
-**** parens
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/elpa/adjust-parens-3.0")
-  (require 'adjust-parens)
-
-  (add-hook 'clojure-mode-hook #'adjust-parens-mode)
-  (add-hook 'emacs-lisp-mode-hook #'adjust-parens-mode)
-
-  (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-  ;; (add-hook 'groovy-mode-hook #'aggressive-indent-mode)
-
-  ;; nice, but has caused problems
-  ;; (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (use-package cider
+    :config
+    ;; Log communication with the nREPL server
+    (setq nrepl-log-messages t)
+    (setq nrepl-hide-special-buffers t)
+    ;; Prevent the auto-display of the REPL buffer
+    (setq cider-repl-pop-to-buffer-on-connect nil)
+    ;; Enable eldoc in Clojure buffers
+    (add-hook 'cider-mode-hook #'eldoc-mode))
 #+END_SRC
 
 *** keybindings
 #+BEGIN_SRC emacs-lisp
   (defun count-last-sexp ()
-	 (interactive)
-	 (cider-interactive-eval
+         (interactive)
+         (cider-interactive-eval
            (format "(count %s)"
                    (cider-last-sexp))))
 
   (defun nth-from-last-sexp (n)
-	 (interactive "p")
-	 (cider-interactive-eval
+         (interactive "p")
+         (cider-interactive-eval
            (format "(nth %s %s)"
                    (cider-last-sexp) n)))
 
@@ -364,9 +261,9 @@ Annoying, but seems to be needed since 24.4
     (interactive)
     (cider-interactive-eval
       (format
-	"(require 'scad-clj.scad)
-	 (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
-	(cider-last-sexp))))
+        "(require 'scad-clj.scad)
+         (spit \"eval.scad\" (scad-clj.scad/write-scad %s))"
+        (cider-last-sexp))))
 
   (defun frame-last-sexp ()
     (interactive)
@@ -392,33 +289,30 @@ Annoying, but seems to be needed since 24.4
     (define-key cider-mode-map (kbd "C-c f") 'frame-last-sexp)
     (define-key cider-mode-map (kbd "C-c b") 'benchmark-last-sexp))
 #+END_SRC
+
 *** misc
 #+BEGIN_SRC emacs-lisp
   (defvar clojure-defun-indents '(match resize translate rotate scale mirror))
-  ;; (add-hook 'clojure-mode-hook 'typed-clojure-mode)
-
-  ;; (eval-after-load 'flycheck '(flycheck-clojure-setup))
-  ;; (eval-after-load 'flycheck
-  ;;   '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
 
   ;; (add-hook 'clojure-mode-hook (lambda ()
   ;;                                (clj-refactor-mode 1)))
 #+END_SRC
 ** ESS
+#+BEGIN_SRC emacs-lisp
+  (use-package ess
+    :config
+    (setq ess-use-ido t))
+#+END_SRC
+
 *** autoload
 #+BEGIN_SRC emacs-lisp
   (autoload 'R-mode "ess-site" "Major mode for editing R source.
   See `ess-mode' for more help." t)
   (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
 #+END_SRC
-*** julia
-#+BEGIN_SRC emacs-lisp
-  (setq inferior-julia-program-name "/usr/bin/julia")
-#+END_SRC
+
 *** R
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'R-mode-hook 'flycheck-mode)
-
   ;; From Martin Maechler <maechler at stat.math.ethz.ch>:
   (with-eval-after-load "comint"
     (setq comint-scroll-to-bottom-on-output 'others)   ; not current, dflt is nil
@@ -429,123 +323,220 @@ Annoying, but seems to be needed since 24.4
       'comint-next-matching-input-from-input)
     (define-key comint-mode-map "\C-a" 'comint-bol-or-process-mark))
 #+END_SRC
+
+** evil
+#+BEGIN_SRC emacs-lisp
+  (use-package evil
+    :demand t
+    :pin melpa  ;; TODO - melpa-stable after evil-smartparens bug fix merged
+    :init
+    (setq evil-want-integration nil)
+    (setq evil-want-C-i-jump nil)
+    :config
+    (evil-mode 1)
+
+    (define-key evil-insert-state-map (kbd "C-k") #'sp-kill-hybrid-sexp)
+
+    (define-key evil-normal-state-map (kbd "M-x") 'smex)
+    (define-key evil-insert-state-map (kbd "M-x") 'smex)
+
+    (define-key evil-normal-state-map (kbd ">") 'sp-slurp-hybrid-sexp)
+    (define-key evil-normal-state-map (kbd "<") 'sp-forward-barf-sexp)
+    (define-key evil-normal-state-map (kbd "M->") 'sp-backward-barf-sexp)
+    (define-key evil-normal-state-map (kbd "M-<") 'sp-backward-slurp-sexp))
+
+  (use-package evil-collection
+    :demand t
+    :pin melpa
+    :custom (evil-collection-company-use-tng nil)
+    :config (evil-collection-init))
+
+  (use-package evil-leader
+    :demand t
+    :config (global-evil-leader-mode))
+
+  (use-package evil-smartparens
+    :pin melpa  ;; TODO - melpa-stable after evil-smartparens bug fix merged
+    :hook (smartparens-enabled . evil-smartparens-mode))
+
+  (use-package evil-surround
+    :demand t
+    :config (global-evil-surround-mode 1))
+
+  (use-package evil-org
+    :pin melpa
+    :hook (org-mode . evil-org-mode)
+    :diminish evil-org-mode
+    :config (evil-org-set-key-theme))
+
+  (use-package undo-tree
+    :diminish undo-tree-mode)
+#+END_SRC
+
+** fish
+#+BEGIN_SRC emacs-lisp
+  (use-package fish-mode
+    :config
+    (add-hook 'fish-mode-hook
+              (lambda ()
+                (add-hook 'before-save-hook 'fish_indent-before-save))))
+#+END_SRC
+
 ** flycheck
 #+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'after-init-hook #'global-flycheck-mode)
+  (use-package flycheck
+    :demand t
+    :hook ((elpy-mode . flycheck-mode)
+           (emacs-lisp-mode . flycheck-mode)
+           (ensime-mode . flycheck-mode)
+           (groovy-mode . flycheck-mode)
+           (rust-mode . flycheck-mode)
+           (shell-script-mode . flycheck-mode)))
 #+END_SRC
+
+** groovy
+#+BEGIN_SRC emacs-lisp
+  (use-package groovy-mode
+    :pin melpa ;; want latest
+    :init
+    (setq groovy-indent-offset 2))
+#+END_SRC
+
 ** haskell
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'haskell-mode-hook 'intero-mode)
-  (add-hook 'haskell-mode-hook 'hindent-mode)
+  (use-package intero
+    :hook (haskell-mode . intero-mode))
+
+  (use-package hindent
+    :pin melpa ;; want latest
+    :hook (haskell-mode . hindent-mode))
 #+END_SRC
+
+** latex
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :pin gnu)
+#+END_SRC
+
+** org
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :pin org
+    :config
+    (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s"))
+   ;; '(org-latex-pdf-process (quote ("pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f")))
+#+END_SRC
+
+*** misc
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook 'org-indent-mode)
+#+END_SRC
+
+*** export
+#+BEGIN_SRC emacs-lisp
+  (defvar org-export-allow-bind-keywords t)
+#+END_SRC
+
+*** babel
+**** misc
+#+BEGIN_SRC emacs-lisp
+  (defvar org-startup-indented t)
+  (defvar org-src-fontify-natively t)
+
+  (defun org-babel-invalidate-results ()
+    "invalidated all cached babel results"
+    (interactive)
+    (while (re-search-forward "#\\+RESULTS\\[[[:alnum:]]+\\]" nil t)
+      (replace-match "#+RESULTS[]" nil nil)))
+#+END_SRC
+
+**** disable evaluation confirmations
+#+BEGIN_SRC emacs-lisp
+  (defvar org-confirm-babel-evaluate nil)
+#+END_SRC
+
+**** inline images
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  (add-hook 'org-mode-hook 'org-display-inline-images)
+#+END_SRC
+
+**** load languages
+#+BEGIN_SRC emacs-lisp
+  (defvar inferior-julia-program-name "/usr/bin/julia")
+  (add-to-list 'load-path "~/.emacs.d/ob-julia")
+
+  (with-eval-after-load "org"
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (haskell . t)
+       (julia . t)
+       (R . t))))
+#+END_SRC
+
+** python
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :demand t
+    :config
+    (elpy-enable)
+    (setq elpy-modules
+          (delq 'elpy-module-highlight-indentation elpy-modules))
+
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)))
+#+END_SRC
+
+** parens
+#+BEGIN_SRC emacs-lisp
+  (use-package adjust-parens
+    :pin gnu
+    :load-path "elpa/adjust-parens-3.0"
+    :hook ((clojure-mode . adjust-parens-mode)
+           (emacs-lisp-mode . adjust-parens-mode))
+    :init
+    (require 'adjust-parens))
+
+  (use-package aggressive-indent
+    :hook (clojure-mode . aggressive-indent-mode))
+#+END_SRC
+
 ** rust
 #+BEGIN_SRC emacs-lisp
-   ;; flycheck
-   (with-eval-after-load 'rust-mode
-     (require 'cl))
-   (add-hook 'rust-mode-hook #'flycheck-rust-setup)
-   (add-hook 'rust-mode-hook #'flycheck-mode)
+  (use-package rust-mode)
 
-   ;; racer
-   (setq racer-rust-src-path "/usr/src/rust/src/")
-   (add-hook 'rust-mode-hook #'racer-mode)
-   (add-hook 'racer-mode-hook #'eldoc-mode)
+  (use-package racer
+    :after rust-mode
+    :hook (rust-mode . racer-mode)
+    :config
+    (defvar racer-rust-src-path "/home/mfarrell/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src")
+    (add-hook 'racer-mode-hook #'eldoc-mode))
+
+  (use-package cargo
+    :after rust-mode
+    :hook (rust-mode-hook . cargo-minor-mode))
 #+END_SRC
+
 ** scala
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'ensime-mode-hook 'flycheck-mode)
+  (use-package ensime)
 #+END_SRC
+
 ** smartparens
-   https://github.com/Fuco1/smartparens/wiki/Example-configuration
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load "smartparens-autoloads"
+  (use-package smartparens
+    :demand t
+    :config
     (require 'smartparens-config)
-    (smartparens-global-mode t)
-    (smartparens-global-strict-mode t)
-
-    ;; highlights matching pairs
-    (show-smartparens-global-mode t)
-
-    ;; keybinding management
-    (sp-use-smartparens-bindings)
-
-    ;; pair management
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-
-    ;; markdown-mode
-    (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-      (sp-local-pair "*" "*" :bind "C-*")
-      (sp-local-tag "2" "**" "**")
-      (sp-local-tag "s" "```scheme" "```")
-      (sp-local-tag "<" "<_>" "</_>" :transform 'sp-match-sgml-tags))
-
-    ;; tex-mode latex-mode
-    (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
-      (sp-local-tag "i" "\"<" "\">"))
-
-    ;; html-mode
-    (sp-with-modes '(html-mode sgml-mode)
-      (sp-local-pair "<" ">"))
-
-    ;; lisp modes
-    (sp-with-modes sp--lisp-modes
-      (sp-local-pair "(" nil :bind "C-("))
-
-    (require 'smartparens-latex)
-    )
+    (smartparens-global-mode 1)
+    (smartparens-global-strict-mode))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp
-  ;;; keybinding management
-  (with-eval-after-load "smartparens-autoloads"
-    (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
-    (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
 
-    (define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
-    (define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
-    ;; (define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
-    ;; (define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+old configuration:
+https://github.com/Fuco1/smartparens/wiki/Example-configuration
 
-    (define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
-    (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
-    (define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
-    (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
-
-    (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
-    (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
-
-    (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
-    (define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
-
-    (define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
-    (define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
-
-    (define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
-    (define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
-    (define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-    (define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
-
-    (define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
-    (define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
-    (define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
-    (define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
-
-    (define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
-    (define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
-    (define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
-
-    (define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
-    (define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
-
-    (define-key sp-keymap (kbd "s-t") 'sp-prefix-tag-object)
-    (define-key sp-keymap (kbd "s-p") 'sp-prefix-pair-object)
-    (define-key sp-keymap (kbd "s-s c") 'sp-convolute-sexp)
-    (define-key sp-keymap (kbd "s-s a") 'sp-absorb-sexp)
-    (define-key sp-keymap (kbd "s-s e") 'sp-emit-sexp)
-    (define-key sp-keymap (kbd "s-s p") 'sp-add-to-previous-sexp)
-    (define-key sp-keymap (kbd "s-s n") 'sp-add-to-next-sexp)
-    (define-key sp-keymap (kbd "s-s j") 'sp-join-sexp)
-    (define-key sp-keymap (kbd "s-s s") 'sp-split-sexp))
-#+END_SRC
 * miscellaneous
 ** local
 #+BEGIN_SRC emacs-lisp
@@ -556,21 +547,4 @@ Annoying, but seems to be needed since 24.4
 ** bug fix
 #+BEGIN_SRC emacs-lisp
   (setq x-select-enable-clipboard-manager nil)
-#+END_SRC
-
-* customization
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(org-file-apps (quote ((auto-mode . emacs) ("\\.mm\\'" . default) ("\\.x?html?\\'" . default) ("\\.pdf\\'" . "evince %s"))))
-   '(org-latex-pdf-process (quote ("pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f"))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
 #+END_SRC
