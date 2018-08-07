@@ -4,26 +4,28 @@
 
 # If not running interactively, don't do anything
 if not status --is-interactive
-   exit
+    exit
 end
 
 # setenv EDITOR vim
-setenv PATH ~/bin ~/.local/bin /usr/local/bin $PATH
-setenv JAVA_HOME /usr/lib/jvm/default
+set -x PATH ~/bin ~/.local/bin ~/.cabal/bin /usr/local/bin $PATH
+set -x JAVA_HOME /usr/lib/jvm/default
 
 if test "$TERM" = "xterm"
     set -x TERM "xterm-256color"
 end
 
+set -x EDITOR vim
+
 # turn off audible bell
-xset -b
+if test -n "$DISPLAY"
+    xset -b
+end
 
 # aliases
 alias ls='ls --color=auto'
 alias ll='ls -l --color=auto'
 alias em='emacs -nw'
-
-alias git=hub
 
 abbr -a ga 'git add'
 abbr -a gp 'git push'
@@ -39,6 +41,3 @@ abbr -a gra 'git remote add'
 abbr -a grr 'git remote rm'
 abbr -a gpu 'git pull'
 abbr -a gcl 'git clone'
-
-source ~/.config/fish/prompt.fish
-eval sh ~/.config/fish/zenburn.sh
