@@ -34,23 +34,25 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (require 'diminish)
   (require 'bind-key)
 
-
   (setq package-pinned-packages
-        '((dash . "melpa-stable")
-          (epl . "melpa-stable")
+        '((epl . "melpa-stable")
+          (evil-magit . "melpa-stable")
           (f . "melpa-stable")
           (find-file-in-project . "melpa-stable")
           (flx . "melpa-stable")
+          (ghub . "melpa-stable")
+          (git-commit . "melpa-stable")
           (goto-chg . "melpa-stable")
-          (haskell-mode . "melpa-stable")
           (highlight-indentation . "melpa-stable")
           (ivy . "melpa-stable")
+          (magit-popup . "melpa-stable")
+          (memoize . "melpa-stable")
           (pkg-info . "melpa-stable")
           (popup . "melpa-stable")
+          (prop-menu . "melpa-stable")
           (pyvenv . "melpa-stable")
           (s . "melpa-stable")
-          (sbt-mode . "melpa-stable")
-          (scala-mode . "melpa-stable")
+          ;; (with-editor . "melpa-stable") - melpa for magit
           (yasnippet . "melpa-stable")
           ))
 #+END_SRC
@@ -80,10 +82,10 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (blink-cursor-mode 0)
     (setq-default cursor-type 'bar))
 
-  (use-package color-theme-sanityinc-tomorrow
-    :if window-system
+  (use-package dracula-theme
+    ;; :if window-system
     :init
-    (add-hook 'after-init-hook (lambda () (load-theme 'sanityinc-tomorrow-night t))))
+    (add-hook 'after-init-hook (lambda () (load-theme 'dracula t))))
 #+END_SRC
 
 ** console only
@@ -404,6 +406,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** haskell
 #+BEGIN_SRC emacs-lisp
+  (use-package haskell-mode)
+
   (use-package intero
     :hook (haskell-mode . intero-mode))
 
@@ -412,10 +416,20 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :hook (haskell-mode . hindent-mode))
 #+END_SRC
 
+** idris
+#+BEGIN_SRC emacs-lisp
+  (use-package idris-mode)
+#+END_SRC
+
 ** latex
 #+BEGIN_SRC emacs-lisp
   (use-package auctex
     :pin gnu)
+#+END_SRC
+
+** magit
+#+BEGIN_SRC emacs-lisp
+  (use-package magit)
 #+END_SRC
 
 ** org
@@ -493,6 +507,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package adjust-parens
     :pin gnu
+    :ensure t
     :load-path "elpa/adjust-parens-3.0"
     :hook ((clojure-mode . adjust-parens-mode)
            (emacs-lisp-mode . adjust-parens-mode))
@@ -522,6 +537,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** scala
 #+BEGIN_SRC emacs-lisp
   (use-package ensime)
+  (use-package sbt-mode)
+  (use-package scala-mode)
 #+END_SRC
 
 ** smartparens
