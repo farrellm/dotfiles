@@ -83,7 +83,7 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (setq-default cursor-type 'bar))
 
   (use-package dracula-theme
-    ;; :if window-system
+    :if window-system
     :init
     (add-hook 'after-init-hook (lambda () (load-theme 'dracula t))))
 #+END_SRC
@@ -302,15 +302,17 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** ESS
 #+BEGIN_SRC emacs-lisp
   (use-package ess
+    :init
+    (require 'ess-site)
     :config
     (setq ess-use-ido t))
 #+END_SRC
 
 *** autoload
 #+BEGIN_SRC emacs-lisp
-  (autoload 'R-mode "ess-site" "Major mode for editing R source.
-  See `ess-mode' for more help." t)
-  (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
+  ;; (autoload 'R-mode "ess-site" "Major mode for editing R source.
+  ;; See `ess-mode' for more help." t)
+  ;; (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
 #+END_SRC
 
 *** R
@@ -332,7 +334,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :demand t
     :pin melpa  ;; TODO - melpa-stable after evil-smartparens bug fix merged
     :init
-    (setq evil-want-integration nil)
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
     (setq evil-want-C-i-jump nil)
     :config
     (evil-mode 1)
@@ -350,6 +353,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package evil-collection
     :demand t
     :pin melpa
+    :after evil
     :custom (evil-collection-company-use-tng nil)
     :config (evil-collection-init))
 
@@ -418,7 +422,17 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** idris
 #+BEGIN_SRC emacs-lisp
-  (use-package idris-mode)
+  (use-package idris-mode
+    :pin melpa ;; want latest
+    )
+  (add-to-list 'load-path "~/.emacs.d/ob-idris")
+#+END_SRC
+
+** julia
+#+BEGIN_SRC emacs-lisp
+  (use-package julia-mode
+    :pin melpa ;; want latest
+    )
 #+END_SRC
 
 ** latex
@@ -488,7 +502,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
      '((emacs-lisp . t)
        (haskell . t)
        (julia . t)
-       (R . t))))
+       (R . t)
+       (idris . t))))
 #+END_SRC
 
 ** python
