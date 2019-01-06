@@ -41,3 +41,5 @@ abbr -a gra 'git remote add'
 abbr -a grr 'git remote rm'
 abbr -a gpu 'git pull'
 abbr -a gcl 'git clone'
+
+eval (ssh-agent -c) >/dev/null
