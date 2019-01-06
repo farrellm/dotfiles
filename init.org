@@ -36,7 +36,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 
   (setq package-pinned-packages
         '((epl . "melpa-stable")
-          (evil-magit . "melpa-stable")
           (f . "melpa-stable")
           (find-file-in-project . "melpa-stable")
           (flx . "melpa-stable")
@@ -83,7 +82,7 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (setq-default cursor-type 'bar))
 
   (use-package dracula-theme
-    :if window-system
+    ;; :if window-system
     :init
     (add-hook 'after-init-hook (lambda () (load-theme 'dracula t))))
 #+END_SRC
@@ -330,6 +329,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** evil
 #+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/evil-colemak-basics")
+
   (use-package evil
     :demand t
     :pin melpa  ;; TODO - melpa-stable after evil-smartparens bug fix merged
@@ -337,8 +338,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-i-jump nil)
+
     :config
     (evil-mode 1)
+
+    (require 'evil-colemak-basics)
+    (global-evil-colemak-basics-mode)
 
     (define-key evil-insert-state-map (kbd "C-k") #'sp-kill-hybrid-sexp)
 
@@ -350,6 +355,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (define-key evil-normal-state-map (kbd "M->") 'sp-backward-barf-sexp)
     (define-key evil-normal-state-map (kbd "M-<") 'sp-backward-slurp-sexp))
 
+  (use-package evil-snipe
+    :demand t)
+
   (use-package evil-collection
     :demand t
     :pin melpa
@@ -360,10 +368,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package evil-leader
     :demand t
     :config (global-evil-leader-mode))
-
-  (use-package evil-smartparens
-    :pin melpa  ;; TODO - melpa-stable after evil-smartparens bug fix merged
-    :hook (smartparens-enabled . evil-smartparens-mode))
 
   (use-package evil-surround
     :demand t
@@ -378,6 +382,54 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package undo-tree
     :diminish undo-tree-mode)
 #+END_SRC
+
+*** evil-smartparens
+#+begin_src emacs-lisp
+  (use-package evil-smartparens
+    :pin melpa
+
+    :init
+    (require 'evil-smartparens)
+
+    (defun evil-colemak-sp--add-bindings ()
+      (when smartparens-strict-mode
+        (evil-define-key 'normal evil-smartparens-mode-map
+          (kbd "d") #'evil-sp-delete
+          (kbd "w") #'evil-sp-change
+          (kbd "c") #'evil-sp-yank
+          ;; (kbd "s") #'evil-sp-substitute
+          ;; (kbd "S") #'evil-sp-change-whole-line
+          (kbd "X") #'evil-sp-delete-line
+          (kbd "x") #'evil-sp-delete-char)
+        (add-to-list 'evil-change-commands #'evil-sp-change)
+        (evil-define-key 'visual evil-smartparens-mode-map
+          (kbd "X") #'evil-sp-delete-line
+          (kbd "x") #'evil-sp-delete))
+      (evil-define-key 'normal evil-smartparens-mode-map
+        (kbd "D") #'evil-sp-delete-line
+        (kbd "C") #'evil-sp-yank-line
+        (kbd "W") #'evil-sp-change-line)
+      (when smartparens-strict-mode
+        (evil-define-key 'insert evil-smartparens-mode-map
+          (kbd "DEL") 'sp-backward-delete-char))
+      ;; (evil-define-key 'visual evil-smartparens-mode-map
+      ;;   (kbd "o") #'evil-sp-override)
+      (evil-normalize-keymaps))
+
+    (defun evil-colemak-sp--enable ()
+      (evil-colemak-sp--add-bindings)
+      (evil-sp--add-evil-surround-operators))
+
+    (define-minor-mode evil-colemak-smartparens-mode
+      "Toggle evil-smartparens for Colemak."
+      :lighter " es"
+      :init-value nil
+      :keymap evil-smartparens-mode-map
+      (when evil-colemak-smartparens-mode
+        (evil-colemak-sp--enable)))
+
+    :hook (smartparens-enabled . evil-colemak-smartparens-mode))
+#+end_src
 
 ** fish
 #+BEGIN_SRC emacs-lisp
@@ -413,6 +465,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package haskell-mode)
 
   (use-package intero
+    :pin melpa ;; want latest
     :hook (haskell-mode . intero-mode))
 
   (use-package hindent
@@ -443,7 +496,11 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** magit
 #+BEGIN_SRC emacs-lisp
-  (use-package magit)
+  ;; (use-package magit)
+
+  ;; (use-package evil-magit
+  ;;   :init
+  ;;   (require 'evil-magit))
 #+END_SRC
 
 ** org
