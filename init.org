@@ -116,10 +116,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (setq ido-use-faces nil)
     :config
     (flx-ido-mode 1))
-
-  (use-package smex
-    :demand t
-    :config (smex-initialize))
 #+END_SRC
 
 ** auto-revert buffers
@@ -185,15 +181,10 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 
   (global-set-key (kbd "C-x p") 'prev-window)
   (define-key global-map "\M-Q" 'unfill-paragraph)
-  (global-set-key (kbd "C-x x") 'smex)
+  (global-set-key (kbd "C-x x") 'execute-extended-command)
   (global-set-key (kbd "C-X C-b") 'ibuffer)
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
-
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-  ;; This is your old M-x.
-  (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
   (global-set-key (kbd "C-<tab>") 'company-complete-common-or-cycle)
 #+END_SRC
@@ -344,9 +335,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
     (define-key evil-insert-state-map (kbd "C-k") #'sp-kill-hybrid-sexp)
 
-    (define-key evil-normal-state-map (kbd "M-x") 'smex)
-    (define-key evil-insert-state-map (kbd "M-x") 'smex)
-
     (define-key evil-normal-state-map (kbd ">") 'sp-slurp-hybrid-sexp)
     (define-key evil-normal-state-map (kbd "<") 'sp-forward-barf-sexp)
     (define-key evil-normal-state-map (kbd "M->") 'sp-backward-barf-sexp)
@@ -447,6 +435,18 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :pin gnu)
 #+END_SRC
 
+** lisp
+#+BEGIN_SRC emacs-lisp
+  (use-package slime
+    :init
+    (setq inferior-lisp-program "/usr/bin/clisp")
+    (setq slime-contribs '(slime-fancy)))
+
+  (use-package slime-company
+    :init
+    (slime-setup '(slime-fancy slime-company)))
+#+END_SRC
+
 ** magit
 #+BEGIN_SRC emacs-lisp
   ;; (use-package magit)
@@ -535,12 +535,14 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :ensure t
     :load-path "elpa/adjust-parens-3.0"
     :hook ((clojure-mode . adjust-parens-mode)
-           (emacs-lisp-mode . adjust-parens-mode))
+           (emacs-lisp-mode . adjust-parens-mode)
+           (slime-mode . adjust-parens-mode))
     :init
     (require 'adjust-parens))
 
   (use-package aggressive-indent
-    :hook (clojure-mode . aggressive-indent-mode))
+    :hook ((clojure-mode . aggressive-indent-mode)
+           (slime-mode . aggressive-indent-mode)))
 #+END_SRC
 
 ** rust
