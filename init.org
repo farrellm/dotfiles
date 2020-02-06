@@ -294,8 +294,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** ESS
 #+BEGIN_SRC emacs-lisp
   (use-package ess
-    :init
-    (require 'ess-site)
     :config
     (setq ess-use-ido t))
 #+END_SRC
@@ -326,8 +324,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :demand t
     :init
     ;; (setq evil-want-integration t)
-    (setq evil-want-integration nil)
-    ;; (setq evil-want-keybinding nil)
+    ;; (setq evil-want-integration nil)
+    (setq evil-want-keybinding nil)
     (setq evil-want-C-i-jump nil)
 
     :config
@@ -385,8 +383,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :demand t
-    :hook ((elpy-mode . flycheck-mode)
-           (emacs-lisp-mode . flycheck-mode)
+    :hook ((emacs-lisp-mode . flycheck-mode)
            (ensime-mode . flycheck-mode)
            (groovy-mode . flycheck-mode)
            (rust-mode . flycheck-mode)
@@ -403,15 +400,26 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** haskell
 #+BEGIN_SRC emacs-lisp
-  (use-package haskell-mode)
+  (use-package haskell-mode
+    :hook ((haskell-mode . interactive-haskell-mode)
+           (haskell-mode . haskell-indentation-mode)
+           (haskell-mode . haskell-auto-insert-module-template)))
 
-  (use-package intero
+  (use-package ormolu
     :pin melpa ;; want latest
-    :hook (haskell-mode . intero-mode))
+    :hook (haskell-mode . ormolu-format-on-save-mode)
+    :bind
+    (:map haskell-mode-map
+          ("C-c r" . ormolu-format-buffer)))
 
-  (use-package hindent
+  (use-package lsp-haskell
     :pin melpa ;; want latest
-    :hook (haskell-mode . hindent-mode))
+    :after lsp
+    :init (require 'lsp-haskell)
+    ;; :config
+    ;; (setq lsp-haskell-process-path-hie "ghcide")
+    ;; (setq lsp-haskell-process-args-hie '())
+    )
 #+END_SRC
 
 ** idris
@@ -419,7 +427,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package idris-mode
     :pin melpa ;; want latest
     )
-  (add-to-list 'load-path "~/.emacs.d/ob-idris")
+  ;; (add-to-list 'load-path "~/.emacs.d/ob-idris")
 #+END_SRC
 
 ** julia
@@ -427,6 +435,10 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package julia-mode
     :pin melpa ;; want latest
     )
+
+  (use-package julia-repl
+    :pin melpa ;; want latest
+    :hook (('julia-mode . 'julia-repl-mode)))
 #+END_SRC
 
 ** latex
@@ -447,13 +459,37 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (slime-setup '(slime-fancy slime-company)))
 #+END_SRC
 
+** lsp
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    ;; :pin melpa ;; want latest
+    :hook ((c++-mode
+            haskell-mode
+            python-mode)
+           . lsp)
+    :init
+    (setq lsp-prefer-flymake nil)
+    :commands lsp)
+
+  (use-package lsp-ui
+    :pin melpa ;; want latest
+    :commands lsp-ui-mode
+    )
+
+  (use-package company-lsp
+    :pin melpa ;; want latest
+    :config
+    (push 'company-lsp company-backends))
+#+END_SRC
+
 ** magit
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package magit)
+  (use-package magit
+    :bind (("C-x g" . 'magit-status)))
 
-  ;; (use-package evil-magit
-  ;;   :init
-  ;;   (require 'evil-magit))
+  (use-package evil-magit
+    :init
+    (require 'evil-magit))
 #+END_SRC
 
 ** org
@@ -511,21 +547,14 @@ https://www.emacswiki.org/emacs/BackupDirectory
      'org-babel-load-languages
      '((emacs-lisp . t)
        (haskell . t)
-       (julia . t)
+       ;; (julia . t)
        (R . t)
-       (idris . t))))
+       ;; (idris . t)
+       )))
 #+END_SRC
 
 ** python
 #+BEGIN_SRC emacs-lisp
-  (use-package elpy
-    :demand t
-    :config
-    (elpy-enable)
-    (setq elpy-modules
-          (delq 'elpy-module-highlight-indentation elpy-modules))
-
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)))
 #+END_SRC
 
 ** parens
@@ -580,6 +609,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 old configuration:
 https://github.com/Fuco1/smartparens/wiki/Example-configuration
+
+** yaml
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :demand t)
+#+end_src
 
 * miscellaneous
 ** local
