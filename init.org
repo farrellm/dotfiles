@@ -26,11 +26,19 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package)
+
+    (package-install 'quelpa)
+    (quelpa
+     '(quelpa-use-package
+       :fetcher git
+       :url "https://github.com/quelpa/quelpa-use-package.git"))
+
     (package-install 'diminish)
     (package-install 'bind-key))
 
   (eval-when-compile
-    (require 'use-package))
+    (require 'use-package)
+    (require 'quelpa-use-package))
   (require 'diminish)
   (require 'bind-key)
 
@@ -439,6 +447,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package julia-repl
     :pin melpa ;; want latest
     :hook (('julia-mode . 'julia-repl-mode)))
+
+  (use-package lsp-julia
+    :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia")
+    :init
+    (setq lsp-julia-package-dir nil)
+    (require 'lsp-julia))
 #+END_SRC
 
 ** latex
@@ -465,6 +479,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
     ;; :pin melpa ;; want latest
     :hook ((c++-mode
             haskell-mode
+            julia-mode
             python-mode)
            . lsp)
     :init
