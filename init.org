@@ -19,9 +19,10 @@
 ** use-package
 http://cachestocaches.com/2015/8/getting-started-use-package/
 #+BEGIN_SRC emacs-lisp
-  (setq use-package-always-defer t)
   (setq use-package-always-ensure t)
   (setq use-package-always-pin "melpa-stable")
+
+  (setq quelpa-checkout-melpa-p nil)
 
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
@@ -71,7 +72,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 #+BEGIN_SRC emacs-lisp
   (use-package benchmark-init
     :disabled t
-    :demand t
     :config
     ;; To disable collection of benchmark data after init is done.
     (add-hook 'after-init-hook 'benchmark-init/deactivate))
@@ -91,10 +91,8 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (blink-cursor-mode 0)
     (setq-default cursor-type 'bar))
 
-  (use-package dracula-theme
-    ;; :if window-system
-    :init
-    (add-hook 'after-init-hook (lambda () (load-theme 'dracula t))))
+  (use-package dracula-theme)
+  (load-theme 'dracula t)
 #+END_SRC
 
 ** console only
@@ -113,17 +111,24 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (ido-everywhere 1)
 
   (use-package ido-completing-read+
-    :demand t
     :config (ido-ubiquitous-mode 1))
 
   (use-package flx-ido
-    :demand t
     :init
     ;; disable ido faces to see flx highlights.
     (setq ido-enable-flex-matching t)
     (setq ido-use-faces nil)
     :config
     (flx-ido-mode 1))
+
+  (global-set-key (kbd "C-x x") 'execute-extended-command)
+
+  (use-package smex
+    :bind (("M-x" . 'smex)
+           ("C-x x" . 'smex)
+           ("M-X" . 'smex-major-mode-commands)
+           ("C-c C-c M-x" . 'execute-extended-command)))
+
 #+END_SRC
 
 ** auto-revert buffers
@@ -189,7 +194,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 
   (global-set-key (kbd "C-x p") 'prev-window)
   (define-key global-map "\M-Q" 'unfill-paragraph)
-  (global-set-key (kbd "C-x x") 'execute-extended-command)
   (global-set-key (kbd "C-X C-b") 'ibuffer)
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
@@ -220,21 +224,19 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** company
 #+BEGIN_SRC emacs-lisp
   (use-package company
-    :demand t
     :init (setq company-idle-delay 0.1)
     :config (global-company-mode))
 
   (use-package company-flx
-    :demand t
     :pin melpa ;; not in mepla-stable
     :config (company-flx-mode +1))
 #+END_SRC
 
 ** clojure
 #+BEGIN_SRC emacs-lisp
-  (use-package clojure-mode)
-
   (use-package cider
+    :defer t
+    :ensure nil
     :config
     ;; Log communication with the nREPL server
     (setq nrepl-log-messages t)
@@ -302,15 +304,11 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** ESS
 #+BEGIN_SRC emacs-lisp
   (use-package ess
+    :defer t
     :config
-    (setq ess-use-ido t))
-#+END_SRC
-
-*** autoload
-#+BEGIN_SRC emacs-lisp
-  ;; (autoload 'R-mode "ess-site" "Major mode for editing R source.
-  ;; See `ess-mode' for more help." t)
-  ;; (add-to-list 'auto-mode-alist '("\\.R\\'" . R-mode))
+    (setq ess-use-ido t)
+    :mode (("\\.jl\\'" . ess-julia-mode))
+    )
 #+END_SRC
 
 *** R
@@ -329,7 +327,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :demand t
     :init
     ;; (setq evil-want-integration t)
     ;; (setq evil-want-integration nil)
@@ -346,21 +343,15 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (define-key evil-normal-state-map (kbd "M->") 'sp-backward-barf-sexp)
     (define-key evil-normal-state-map (kbd "M-<") 'sp-backward-slurp-sexp))
 
-  (use-package evil-snipe
-    :demand t)
-
   (use-package evil-collection
-    :demand t
     :after evil
     :custom (evil-collection-company-use-tng nil)
     :config (evil-collection-init))
 
   (use-package evil-leader
-    :demand t
     :config (global-evil-leader-mode))
 
   (use-package evil-surround
-    :demand t
     :config (global-evil-surround-mode 1))
 
   (use-package evil-org
@@ -369,18 +360,14 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
   (use-package undo-tree
     :diminish undo-tree-mode)
-#+END_SRC
 
-*** evil-smartparens
-#+begin_src emacs-lisp
-  (use-package evil-smartparens
-    :init
-    (require 'evil-smartparens))
-#+end_src
+  (use-package evil-smartparens)
+#+END_SRC
 
 ** fish
 #+BEGIN_SRC emacs-lisp
   (use-package fish-mode
+    :defer t
     :config
     (add-hook 'fish-mode-hook
               (lambda ()
@@ -390,7 +377,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :demand t
     :hook ((emacs-lisp-mode . flycheck-mode)
            (ensime-mode . flycheck-mode)
            (groovy-mode . flycheck-mode)
@@ -402,7 +388,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package groovy-mode
     :pin melpa ;; want latest
-    :init
+    :ensure nil
+    :defer t
+    :config
     (setq groovy-indent-offset 2))
 #+END_SRC
 
@@ -423,7 +411,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package lsp-haskell
     :pin melpa ;; want latest
     :after lsp
-    :init (require 'lsp-haskell)
     ;; :config
     ;; (setq lsp-haskell-process-path-hie "ghcide")
     ;; (setq lsp-haskell-process-args-hie '())
@@ -434,7 +421,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package idris-mode
     :pin melpa ;; want latest
-    )
+    :defer t)
   ;; (add-to-list 'load-path "~/.emacs.d/ob-idris")
 #+END_SRC
 
@@ -442,35 +429,45 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package julia-mode
     :pin melpa ;; want latest
-    )
+    :defer t)
 
   (use-package julia-repl
+    :disabled t
+    :ensure nil
     :pin melpa ;; want latest
     :hook (('julia-mode . 'julia-repl-mode)))
 
   (use-package lsp-julia
-    :quelpa (lsp-julia :fetcher github :repo "non-Jedi/lsp-julia")
+    :disabled t
+    :ensure nil
+    :pin melpa
     :init
-    (setq lsp-julia-package-dir nil)
-    (require 'lsp-julia))
+    (setq lsp-julia-package-dir nil))
+
 #+END_SRC
 
 ** latex
 #+BEGIN_SRC emacs-lisp
-  (use-package auctex
-    :pin gnu)
+  (use-package tex
+    :ensure auctex
+    :pin gnu
+    :defer t)
 #+END_SRC
 
 ** lisp
 #+BEGIN_SRC emacs-lisp
   (use-package slime
+    :ensure nil
+    :defer t
     :init
     (setq inferior-lisp-program "/usr/bin/clisp")
-    (setq slime-contribs '(slime-fancy)))
+    (setq slime-contribs '(slime-fancy))
+    :config
+    (slime-setup '(slime-fancy slime-company)))
 
   (use-package slime-company
-    :init
-    (slime-setup '(slime-fancy slime-company)))
+    :ensure nil
+    :defer t)
 #+END_SRC
 
 ** lsp
@@ -479,38 +476,43 @@ https://www.emacswiki.org/emacs/BackupDirectory
     ;; :pin melpa ;; want latest
     :hook ((c++-mode
             haskell-mode
-            julia-mode
+            ;; julia-mode
             python-mode)
            . lsp)
-    :init
-    (setq lsp-prefer-flymake nil)
     :commands lsp)
 
   (use-package lsp-ui
     :pin melpa ;; want latest
-    :commands lsp-ui-mode
-    )
+    :commands lsp-ui-mode)
 
   (use-package company-lsp
     :pin melpa ;; want latest
+    :after (company lsp-mode)
     :config
     (push 'company-lsp company-backends))
+
+  (use-package yasnippet
+    :after lsp-mode)
 #+END_SRC
 
 ** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
+    :disabled t
+    :ensure nil
     :bind (("C-x g" . 'magit-status)))
 
   (use-package evil-magit
-    :init
-    (require 'evil-magit))
+    :disabled t
+    :ensure nil
+    :after (evil magit))
 #+END_SRC
 
 ** org
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :pin org
+    :defer t
     :config
     (setcdr (assoc "\\.pdf\\'" org-file-apps) "evince %s"))
    ;; '(org-latex-pdf-process (quote ("pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex --shell-escape -interaction nonstopmode -output-directory %o %f")))
@@ -576,13 +578,10 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package adjust-parens
     :pin gnu
-    :ensure t
     :load-path "elpa/adjust-parens-3.0"
     :hook ((clojure-mode . adjust-parens-mode)
            (emacs-lisp-mode . adjust-parens-mode)
-           (slime-mode . adjust-parens-mode))
-    :init
-    (require 'adjust-parens))
+           (slime-mode . adjust-parens-mode)))
 
   (use-package aggressive-indent
     :hook ((clojure-mode . aggressive-indent-mode)
@@ -591,7 +590,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** rust
 #+BEGIN_SRC emacs-lisp
-  (use-package rust-mode)
+  (use-package rust-mode
+    :defer t)
 
   (use-package racer
     :after rust-mode
@@ -607,15 +607,22 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** scala
 #+BEGIN_SRC emacs-lisp
-  (use-package ensime)
-  (use-package sbt-mode)
-  (use-package scala-mode)
+  (use-package ensime
+    :ensure nil
+    :defer t)
+
+  (use-package sbt-mode
+    :ensure nil
+    :defer t)
+
+  (use-package scala-mode
+    :ensure nil
+    :defer t)
 #+END_SRC
 
 ** smartparens
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
-    :demand t
     :config
     (require 'smartparens-config)
     (smartparens-global-mode 1)
@@ -628,7 +635,7 @@ https://github.com/Fuco1/smartparens/wiki/Example-configuration
 ** yaml
 #+begin_src emacs-lisp
   (use-package yaml-mode
-    :demand t)
+    :defer t)
 #+end_src
 
 * miscellaneous
