@@ -97,7 +97,8 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 
 ** console only
 #+BEGIN_SRC emacs-lisp
-  ;; (unless window-system)
+  (unless window-system
+    (xterm-mouse-mode 1))
 #+END_SRC
 
 ** It's annoying to have to type 'yes' to answer questions. One letter is enough for confirmation.
@@ -351,6 +352,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package evil-leader
     :config (global-evil-leader-mode))
 
+  (use-package evil-smartparens
+    :hook (smartparens-enabled . evil-smartparens-mode))
+
   (use-package evil-surround
     :config (global-evil-surround-mode 1))
 
@@ -360,8 +364,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
   (use-package undo-tree
     :diminish undo-tree-mode)
-
-  (use-package evil-smartparens)
 #+END_SRC
 
 ** fish
