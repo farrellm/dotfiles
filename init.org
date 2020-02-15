@@ -116,6 +116,7 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (global-set-key (kbd "C-x x") 'execute-extended-command)
 
   (use-package smex
+    :commands (smex smex-major-mode-commands)
     :bind (("M-x" . 'smex)
            ("C-x x" . 'smex)
            ("M-X" . 'smex-major-mode-commands)
@@ -189,8 +190,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (global-set-key (kbd "C-X C-b") 'ibuffer)
   (global-set-key (kbd "C-X g") 'goto-line)
   (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
-
-  (global-set-key (kbd "C-<tab>") 'company-complete-common-or-cycle)
 #+END_SRC
 
 ** whitespace
@@ -217,10 +216,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :init (setq company-idle-delay 0.1)
-    :config (global-company-mode))
+    :config (global-company-mode)
+    :bind ("C-<tab>" . 'company-complete-common-or-cycle))
 
   (use-package company-flx
     :pin melpa ;; not in mepla-stable
+    :after company
     :config (company-flx-mode +1))
 #+END_SRC
 
@@ -341,15 +342,19 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :config (evil-collection-init))
 
   (use-package evil-leader
+    :after evil
     :config (global-evil-leader-mode))
 
   (use-package evil-smartparens
+    :after (evil smartparens)
     :hook (smartparens-enabled . evil-smartparens-mode))
 
   (use-package evil-surround
+    :after evil
     :config (global-evil-surround-mode 1))
 
   (use-package evil-org
+    :after evil
     :hook (org-mode . evil-org-mode)
     :diminish evil-org-mode)
 
@@ -466,13 +471,15 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    ;; :pin melpa ;; want latest
+    :pin melpa ;; want latest
     :hook ((c++-mode
             haskell-mode
             ;; julia-mode
             python-mode)
            . lsp)
-    :commands lsp)
+    :commands lsp
+    :config
+    (setq lsp-prefer-flymake nil))
 
   (use-package lsp-ui
     :pin melpa ;; want latest
