@@ -22,24 +22,15 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (setq use-package-always-ensure t)
   (setq use-package-always-pin "melpa-stable")
 
-  (setq quelpa-checkout-melpa-p nil)
-
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package)
-
-    (package-install 'quelpa)
-    (quelpa
-     '(quelpa-use-package
-       :fetcher git
-       :url "https://github.com/quelpa/quelpa-use-package.git"))
 
     (package-install 'diminish)
     (package-install 'bind-key))
 
   (eval-when-compile
-    (require 'use-package)
-    (require 'quelpa-use-package))
+    (require 'use-package))
   (require 'diminish)
   (require 'bind-key)
 
