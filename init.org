@@ -491,14 +491,13 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** magit
 #+BEGIN_SRC emacs-lisp
   (use-package magit
-    :disabled t
-    :ensure nil
+    :defer t
     :bind (("C-x g" . 'magit-status)))
 
   (use-package evil-magit
-    :disabled t
-    :ensure nil
-    :after (evil magit))
+    :defer t
+    :after (evil magit)
+    :init (with-eval-after-load "magit" (require 'evil-magit)))
 #+END_SRC
 
 ** org
