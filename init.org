@@ -3,17 +3,16 @@
 #+EMAIL: farrellm@alum.mit.edu
 
 * package management
+
 ** initialization
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (setq package-enable-at-startup nil)
+  (when (< emacs-major-version 27)
+    (package-initialize))
 
   ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-
-  (package-initialize)
 #+END_SRC
 
 ** use-package
@@ -82,8 +81,9 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (blink-cursor-mode 0)
     (setq-default cursor-type 'bar))
 
-  (use-package dracula-theme)
-  (load-theme 'dracula t)
+  (use-package dracula-theme
+    :config
+    (load-theme 'dracula t))
 #+END_SRC
 
 ** console only
@@ -226,15 +226,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :config (company-flx-mode +1))
 #+END_SRC
 
-
 ** ESS
 #+BEGIN_SRC emacs-lisp
   (use-package ess
     :defer t
     :config
-    (setq ess-use-ido t)
-    ;; :mode (("\\.jl\\'" . ess-julia-mode))
-    )
+    (setq ess-use-ido t))
 #+END_SRC
 
 *** R
@@ -308,6 +305,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
+    :pin melpa ;; want latest
     :config
     (setq flycheck-global-modes '(not))
     (global-flycheck-mode))
@@ -360,21 +358,35 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :pin melpa ;; want latest
     :defer t)
 
-  (use-package julia-repl
+  (use-package julia-snail
     :pin melpa ;; want latest
-    :defer t
-    :hook ('julia-mode . 'julia-repl-mode)
-    :init (with-eval-after-load "julia-mode" (require 'julia-repl)))
+    :hook (julia-mode . julia-snail-mode)
+    :config (progn
+              ;; order matters, unfortunately:
+              (add-to-list 'display-buffer-alist
+                           ;; match buffers named "*julia" in general
+                           '("\\*julia"
+                             ;; actions:
+                             (display-buffer-reuse-window display-buffer-same-window)))
+              (add-to-list 'display-buffer-alist
+                           ;; when displaying buffers named "*julia" in REPL mode
+                           '((lambda (bufname _action)
+                               (and (string-match-p "\\*julia" bufname)
+                                    (with-current-buffer bufname
+                                      (bound-and-true-p julia-snail-repl-mode))))
+                             ;; actions:
+                             (display-buffer-reuse-window display-buffer-pop-up-window)))
+              ))
 
-  (use-package lsp-julia
-    :pin melpa
-    :defer t
-    :init
-    (with-eval-after-load "julia-mode" (require 'lsp-julia))
-    (setq lsp-julia-package-dir nil)
-    :config
-    (setq lsp-julia-default-environment "~/.julia/environments/v1.3"
-          lsp-julia-default-depot "~/.julia"))
+  ;; (use-package lsp-julia
+  ;;   :pin melpa
+  ;;   :defer t
+  ;;   :init
+  ;;   (with-eval-after-load "julia-mode" (require 'lsp-julia))
+  ;;   (setq lsp-julia-package-dir nil)
+  ;;   :config
+  ;;   (setq lsp-julia-default-environment "~/.julia/environments/v1.3"
+  ;;         lsp-julia-default-depot "~/.julia"))
 #+END_SRC
 
 ** latex
@@ -389,11 +401,11 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :pin melpa ;; want latest
-    :hook ((c++-mode
-            haskell-mode
-            julia-mode
-            python-mode)
-           . lsp)
+    :hook (((c++-mode
+             haskell-mode
+             python-mode)
+            . lsp)
+           (lsp-mode . yas-minor-mode))
     :commands lsp
     :config
     (setq lsp-prefer-flymake nil))
@@ -457,24 +469,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
       (replace-match "#+RESULTS[]" nil nil)))
 #+END_SRC
 
-** python
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
-** parens
-#+BEGIN_SRC emacs-lisp
-  (use-package adjust-parens
-    :pin gnu
-    :load-path "elpa/adjust-parens-3.0"
-    :hook ((clojure-mode . adjust-parens-mode)
-           (emacs-lisp-mode . adjust-parens-mode)
-           (slime-mode . adjust-parens-mode)))
-
-  (use-package aggressive-indent
-    :hook ((clojure-mode . aggressive-indent-mode)
-           (slime-mode . aggressive-indent-mode)))
-#+END_SRC
-
 ** rust
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode
@@ -530,6 +524,11 @@ https://github.com/Fuco1/smartparens/wiki/Example-configuration
 ** yaml
 #+begin_src emacs-lisp
   (use-package yaml-mode
+    :defer t)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package nix-mode
     :defer t)
 #+end_src
 
