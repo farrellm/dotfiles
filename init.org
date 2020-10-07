@@ -414,12 +414,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :pin melpa ;; want latest
     :commands lsp-ui-mode)
 
-  (use-package company-lsp
-    :pin melpa ;; want latest
-    :after (company lsp-mode)
-    :config
-    (push 'company-lsp company-backends))
-
   (use-package yasnippet
     :after lsp-mode)
 #+END_SRC
@@ -433,7 +427,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package evil-magit
     :defer t
     :after (evil magit)
-    :init (with-eval-after-load "magit" (require 'evil-magit)))
+    :init (require 'evil-magit))
 #+END_SRC
 
 ** org
@@ -467,6 +461,24 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (interactive)
     (while (re-search-forward "#\\+RESULTS\\[[[:alnum:]]+\\]" nil t)
       (replace-match "#+RESULTS[]" nil nil)))
+
+  (use-package emacsql)
+  (use-package emacsql-sqlite3)
+
+  (use-package org-roam
+    :ensure t
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory "/home/farrellm/Dropbox/org/roam")
+    :bind (:map org-roam-mode-map
+            (("C-c n l" . org-roam)
+             ("C-c n f" . org-roam-find-file)
+             ("C-c n g" . org-roam-graph-show))
+            :map org-mode-map
+            (("C-c n i" . org-roam-insert))
+            (("C-c n I" . org-roam-insert-immediate)))
+    )
 #+END_SRC
 
 ** rust
@@ -535,8 +547,8 @@ https://github.com/Fuco1/smartparens/wiki/Example-configuration
 * miscellaneous
 ** local
 #+BEGIN_SRC emacs-lisp
-  (when (file-exists-p "~/.emacs.d/local.el")
-    (load "~/.emacs.d/local"))
+  (when (file-exists-p "~/.config/emacs/local.el")
+    (load "~/.config/emacs/local"))
 #+END_SRC
 
 ** bug fix
