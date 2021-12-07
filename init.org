@@ -6,12 +6,9 @@
 
 ** initialization
 #+BEGIN_SRC emacs-lisp
-  (when (< emacs-major-version 27)
-    (package-initialize))
+  (package-initialize)
 
-  ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
@@ -19,7 +16,6 @@
 http://cachestocaches.com/2015/8/getting-started-use-package/
 #+BEGIN_SRC emacs-lisp
   (setq use-package-always-ensure t)
-  (setq use-package-always-pin "melpa-stable")
 
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
@@ -32,29 +28,6 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
     (require 'use-package))
   (require 'diminish)
   (require 'bind-key)
-
-  (setq package-pinned-packages
-        '((dash . "melpa-stable")
-          (epl . "melpa-stable")
-          (f . "melpa-stable")
-          (find-file-in-project . "melpa-stable")
-          (flx . "melpa-stable")
-          (ghub . "melpa-stable")
-          (git-commit . "melpa-stable")
-          (goto-chg . "melpa-stable")
-          (highlight-indentation . "melpa-stable")
-          (ivy . "melpa-stable")
-          (magit-popup . "melpa-stable")
-          (memoize . "melpa-stable")
-          (pkg-info . "melpa-stable")
-          (popup . "melpa-stable")
-          (prop-menu . "melpa-stable")
-          (pyvenv . "melpa-stable")
-          (s . "melpa-stable")
-          (sesman . "melpa-stable")
-          ;; (with-editor . "melpa-stable") - melpa for magit
-          (yasnippet . "melpa-stable")
-          ))
 #+END_SRC
 
 * basic
@@ -221,7 +194,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :bind ("C-<tab>" . 'company-complete-common-or-cycle))
 
   (use-package company-flx
-    :pin melpa ;; not in mepla-stable
     :after company
     :config (company-flx-mode +1))
 #+END_SRC
@@ -305,7 +277,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :pin melpa ;; want latest
     :config
     (setq flycheck-global-modes '(not))
     (global-flycheck-mode))
@@ -314,7 +285,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** groovy
 #+BEGIN_SRC emacs-lisp
   (use-package groovy-mode
-    :pin melpa ;; want latest
     :ensure nil
     :defer t
     :config
@@ -329,14 +299,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
            (haskell-mode . haskell-auto-insert-module-template)))
 
   (use-package ormolu
-    :pin melpa ;; want latest
     :hook (haskell-mode . ormolu-format-on-save-mode)
     :bind
     (:map haskell-mode-map
           ("C-c r" . ormolu-format-buffer)))
 
   (use-package lsp-haskell
-    :pin melpa ;; want latest
     :after lsp
     ;; :config
     ;; (setq lsp-haskell-process-path-hie "ghcide")
@@ -347,7 +315,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** idris
 #+BEGIN_SRC emacs-lisp
   (use-package idris-mode
-    :pin melpa ;; want latest
     :defer t)
   ;; (add-to-list 'load-path "~/.emacs.d/ob-idris")
 #+END_SRC
@@ -355,11 +322,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** julia
 #+BEGIN_SRC emacs-lisp
   (use-package julia-mode
-    :pin melpa ;; want latest
     :defer t)
 
   (use-package julia-snail
-    :pin melpa ;; want latest
     :hook (julia-mode . julia-snail-mode)
     :config (progn
               ;; order matters, unfortunately:
@@ -393,14 +358,12 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package tex
     :ensure auctex
-    :pin gnu
     :defer t)
 #+END_SRC
 
 ** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
-    :pin melpa ;; want latest
     :hook (((c++-mode
              haskell-mode
              python-mode)
@@ -411,7 +374,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (setq lsp-prefer-flymake nil))
 
   (use-package lsp-ui
-    :pin melpa ;; want latest
     :commands lsp-ui-mode)
 
   (use-package yasnippet
@@ -433,7 +395,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :pin org
     :defer t
     :hook ((org-mode . auto-fill-mode)
            (org-mode . flyspell-mode)
@@ -528,7 +489,6 @@ https://github.com/Fuco1/smartparens/wiki/Example-configuration
 ** vterm
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
-    :pin melpa ;; not in mepla-stable
     :hook ((vterm-mode . turn-off-smartparens-strict-mode)
            (vterm-mode . turn-off-smartparens-mode)))
 #+END_SRC
