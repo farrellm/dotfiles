@@ -70,31 +70,28 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
   (fset 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
 
-** Ido, which is short for "Interactively Do Things," is an amazingly efficient way to select files and switch buffers.
+** Ivy + Counsel + Swiper
 #+BEGIN_SRC emacs-lisp
-  (ido-mode 1)
-  (ido-everywhere 1)
+  (use-package flx)
+  (use-package smex)
 
-  (use-package ido-completing-read+
-    :config (ido-ubiquitous-mode 1))
-
-  (use-package flx-ido
+  (use-package ivy
     :init
-    ;; disable ido faces to see flx highlights.
-    (setq ido-enable-flex-matching t)
-    (setq ido-use-faces nil)
+    (ivy-mode 1)
     :config
-    (flx-ido-mode 1))
+    (setq ivy-re-builders-alist
+          '((t . ivy--regex-fuzzy))))
 
-  (global-set-key (kbd "C-x x") 'execute-extended-command)
+  (use-package counsel
+    :init
+    (counsel-mode 1)
+    :bind
+    (("C-x x" . 'counsel-M-x)))
 
-  (use-package smex
-    :commands (smex smex-major-mode-commands)
-    :bind (("M-x" . 'smex)
-           ("C-x x" . 'smex)
-           ("M-X" . 'smex-major-mode-commands)
-           ("C-c C-c M-x" . 'execute-extended-command)))
-
+  (use-package swiper
+    :bind
+    (("C-s" . 'swiper-isearch)
+     ("C-w" . 'ivy-yank-word)))
 #+END_SRC
 
 ** auto-revert buffers
