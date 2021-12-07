@@ -168,7 +168,10 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 ** whitespace
 #+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode nil)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+  (use-package ws-butler
+    :init
+    (ws-butler-global-mode))
 #+END_SRC
 
 ** backups
