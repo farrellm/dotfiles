@@ -306,18 +306,13 @@ https://www.emacswiki.org/emacs/BackupDirectory
           ("C-c r" . ormolu-format-buffer)))
 
   (use-package lsp-haskell
-    :after lsp
-    ;; :config
-    ;; (setq lsp-haskell-process-path-hie "ghcide")
-    ;; (setq lsp-haskell-process-args-hie '())
-    )
-#+END_SRC
+    :after lsp)
+  (custom-set-variables
+   '(lsp-haskell-server-path "~/.ghcup/bin/haskell-language-server-wrapper"))
 
-** idris
-#+BEGIN_SRC emacs-lisp
-  (use-package idris-mode
-    :defer t)
-  ;; (add-to-list 'load-path "~/.emacs.d/ob-idris")
+  (use-package direnv
+    :config
+    (direnv-mode))
 #+END_SRC
 
 ** julia
