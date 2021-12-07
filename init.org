@@ -438,9 +438,11 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** rust
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode
+    :ensure nil
     :defer t)
 
   (use-package racer
+    :ensure nil
     :after rust-mode
     :hook ((rust-mode . racer-mode)
            (racer-mode . eldoc-mode))
@@ -448,6 +450,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (setq racer-rust-src-path "/home/mfarrell/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src"))
 
   (use-package cargo
+    :ensure nil
     :after rust-mode
     :hook (rust-mode-hook . cargo-minor-mode))
 #+END_SRC
