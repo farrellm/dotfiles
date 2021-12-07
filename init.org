@@ -320,34 +320,26 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package julia-mode
     :defer t)
 
-  (use-package julia-snail
-    :hook (julia-mode . julia-snail-mode)
-    :config (progn
-              ;; order matters, unfortunately:
-              (add-to-list 'display-buffer-alist
-                           ;; match buffers named "*julia" in general
-                           '("\\*julia"
-                             ;; actions:
-                             (display-buffer-reuse-window display-buffer-same-window)))
-              (add-to-list 'display-buffer-alist
-                           ;; when displaying buffers named "*julia" in REPL mode
-                           '((lambda (bufname _action)
-                               (and (string-match-p "\\*julia" bufname)
-                                    (with-current-buffer bufname
-                                      (bound-and-true-p julia-snail-repl-mode))))
-                             ;; actions:
-                             (display-buffer-reuse-window display-buffer-pop-up-window)))
-              ))
+  ;; (use-package julia-staticlint
+  ;;   ;; https://github.com/dmalyuta/julia-staticlint
+  ;;   ;; Emacs Flycheck support for StaticLint.jl
+  ;;   :ensure nil
+  ;;   :quelpa ((julia-staticlint :fetcher github
+  ;;                                :repo "dmalyuta/julia-staticlint"
+  ;;                                :files (:defaults "julia_staticlint_server.jl"
+  ;;                                                  "julia_staticlint_client.jl")))
+  ;;   :hook ((julia-mode . julia-staticlint-activate))
+  ;;   :config
+  ;;   (julia-staticlint-init))
 
   ;; (use-package lsp-julia
-  ;;   :pin melpa
-  ;;   :defer t
-  ;;   :init
-  ;;   (with-eval-after-load "julia-mode" (require 'lsp-julia))
-  ;;   (setq lsp-julia-package-dir nil)
   ;;   :config
-  ;;   (setq lsp-julia-default-environment "~/.julia/environments/v1.3"
-  ;;         lsp-julia-default-depot "~/.julia"))
+  ;;   (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
+
+  ;; (use-package julia-snail
+  ;;   :requires vterm
+  ;;   :hook (julia-mode . julia-snail-mode)
+  ;;   )
 #+END_SRC
 
 ** latex
