@@ -223,13 +223,14 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :init
-    ;; (setq evil-want-integration t)
-    ;; (setq evil-want-integration nil)
+    (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-i-jump nil)
+    (setq evil-undo-system 'undo-redo)
 
     :config
     (evil-mode 1)
+    (evil-set-initial-state 'deft-mode 'insert)
 
     (define-key evil-insert-state-map (kbd "C-k") #'sp-kill-hybrid-sexp)
 
@@ -385,11 +386,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package magit
     :defer t
     :bind (("C-x g" . 'magit-status)))
-
-  (use-package evil-magit
-    :defer t
-    :after (evil magit)
-    :init (require 'evil-magit))
 #+END_SRC
 
 ** org
