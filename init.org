@@ -303,7 +303,10 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :hook (haskell-mode . ormolu-format-on-save-mode)
     :bind
     (:map haskell-mode-map
-          ("C-c r" . ormolu-format-buffer)))
+          ("C-c r" . ormolu-format-buffer))
+    ;; :custom
+    ;; (ormolu-process-path "fourmolu")
+    )
 
   (use-package lsp-haskell
     :after lsp)
