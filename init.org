@@ -9,7 +9,6 @@
   (package-initialize)
 
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 #+END_SRC
 
 ** use-package
@@ -381,6 +380,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** org
 #+BEGIN_SRC emacs-lisp
   (use-package org
+    :pin gnu
     :defer t
     :hook ((org-mode . auto-fill-mode)
            (org-mode . flyspell-mode)
