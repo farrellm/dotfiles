@@ -278,7 +278,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
     :config
-    (setq flycheck-global-modes '(not))
+    (setq flycheck-global-modes '(not ess-mode))
     (global-flycheck-mode))
 #+END_SRC
 
@@ -296,7 +296,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package haskell-mode
     :hook ((haskell-mode . interactive-haskell-mode)
            (haskell-mode . haskell-indentation-mode)
-           (haskell-mode . haskell-auto-insert-module-template)))
+           (haskell-mode . haskell-auto-insert-module-template))
+    :config
+    (setq haskell-font-lock-quasi-quote-modes nil))
 
   (use-package ormolu
     :hook (haskell-mode . ormolu-format-on-save-mode)
@@ -309,8 +311,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
   (use-package lsp-haskell
     :after lsp)
-  (custom-set-variables
-   '(lsp-haskell-server-path "~/.ghcup/bin/haskell-language-server-wrapper"))
 
   (use-package direnv
     :config
@@ -364,7 +364,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (setq lsp-prefer-flymake nil))
 
   (use-package lsp-ui
-    :commands lsp-ui-mode)
+    :commands lsp-ui-mode
+    :custom
+    (lsp-ui-doc-show-with-cursor t))
 
   (use-package yasnippet
     :after lsp-mode)
