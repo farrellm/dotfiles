@@ -225,7 +225,7 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-i-jump nil)
-    (setq evil-undo-system 'undo-redo)
+    (setq evil-undo-system 'undo-tree)
 
     :config
     (evil-mode 1)
@@ -261,7 +261,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :diminish evil-org-mode)
 
   (use-package undo-tree
-    :diminish undo-tree-mode)
+    :diminish undo-tree-mode
+    :init
+    (global-undo-tree-mode))
 #+END_SRC
 
 ** fish
