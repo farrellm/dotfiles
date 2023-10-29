@@ -327,6 +327,17 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :defer t)
 #+END_SRC
 
+** ligatures
+#+BEGIN_SRC emacs-lisp
+  (use-package pragmatapro-lig
+    :vc (:url "https://github.com/lumiknit/emacs-pragmatapro-ligatures"
+         :rev :newest))
+
+  (when window-system
+    (require 'pragmatapro-lig)
+    (pragmatapro-lig-global-mode))
+#+END_SRC
+
 ** lsp
 #+BEGIN_SRC emacs-lisp
   (use-package eglot
