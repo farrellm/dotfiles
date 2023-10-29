@@ -3,11 +3,9 @@
 #+EMAIL: farrellm@alum.mit.edu
 
 * package management
-
 ** initialization
 #+BEGIN_SRC emacs-lisp
   (package-initialize)
-
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 #+END_SRC
 
@@ -16,17 +14,8 @@ http://cachestocaches.com/2015/8/getting-started-use-package/
 #+BEGIN_SRC emacs-lisp
   (setq use-package-always-ensure t)
 
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package)
-
-    (package-install 'diminish)
-    (package-install 'bind-key))
-
-  (eval-when-compile
-    (require 'use-package))
-  (require 'diminish)
-  (require 'bind-key)
+  (use-package diminish
+    :ensure t)
 #+END_SRC
 
 * basic
@@ -263,7 +252,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
   (use-package undo-tree
     :diminish undo-tree-mode
     :init
-    (global-undo-tree-mode))
+    (global-undo-tree-mode)
+    (setq undo-tree-history-directory-alist '(("." . "~/.undo-tree"))))
 #+END_SRC
 
 ** fish
@@ -274,14 +264,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (add-hook 'fish-mode-hook
               (lambda ()
                 (add-hook 'before-save-hook 'fish_indent-before-save))))
-#+END_SRC
-
-** flycheck
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :config
-    (setq flycheck-global-modes '(not ess-mode))
-    (global-flycheck-mode))
 #+END_SRC
 
 ** groovy
@@ -384,7 +366,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
 ** org
 #+BEGIN_SRC emacs-lisp
   (use-package org
-    :pin gnu
     :defer t
     :hook ((org-mode . auto-fill-mode)
            (org-mode . flyspell-mode)
@@ -412,11 +393,9 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (while (re-search-forward "#\\+RESULTS\\[[[:alnum:]]+\\]" nil t)
       (replace-match "#+RESULTS[]" nil nil)))
 
-  (use-package emacsql)
-  (use-package emacsql-sqlite3)
-
   (setq org-roam-v2-ack t)
   (use-package org-roam
+    :defer t
     :config
     (add-to-list 'display-buffer-alist
                  '("\\*org-roam\\*"
@@ -492,6 +471,7 @@ https://github.com/Fuco1/smartparens/wiki/Example-configuration
 ** vterm
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
+    :defer t
     :hook ((vterm-mode . turn-off-smartparens-strict-mode)
            (vterm-mode . turn-off-smartparens-mode)))
 #+END_SRC
