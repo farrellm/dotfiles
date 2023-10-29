@@ -297,6 +297,23 @@ https://www.emacswiki.org/emacs/BackupDirectory
     (direnv-mode))
 #+END_SRC
 
+** idris2
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package idris2-mode
+    :vc (:url "https://github.com/idris-community/idris2-mode"
+         :rev :newest)
+    :defer t
+    :config
+    ;; Fixes lag when editing idris code with evil
+    (defun ~/evil-motion-range--wrapper (fn &rest args)
+      "Like `evil-motion-range', but override field-beginning for performance.
+  See URL `https://github.com/ProofGeneral/PG/issues/427'."
+      (cl-letf (((symbol-function 'field-beginning)
+                 (lambda (&rest args) 1)))
+        (apply fn args)))
+    (advice-add #'evil-motion-range :around #'~/evil-motion-range--wrapper))
+#+END_SRC
+
 ** julia
 #+BEGIN_SRC emacs-lisp
   (use-package julia-mode
