@@ -289,12 +289,8 @@ https://www.emacswiki.org/emacs/BackupDirectory
     :bind
     (:map haskell-mode-map
           ("C-c r" . ormolu-format-buffer))
-    ;; :custom
-    ;; (ormolu-process-path "fourmolu")
-    )
-
-  (use-package lsp-haskell
-    :after lsp)
+    :custom
+    (ormolu-cabal-default-extensions t))
 
   (use-package direnv
     :config
@@ -318,10 +314,6 @@ https://www.emacswiki.org/emacs/BackupDirectory
   ;;   :config
   ;;   (julia-staticlint-init))
 
-  ;; (use-package lsp-julia
-  ;;   :config
-  ;;   (setq lsp-julia-default-environment "~/.julia/environments/v1.7"))
-
   ;; (use-package julia-snail
   ;;   :requires vterm
   ;;   :hook (julia-mode . julia-snail-mode)
@@ -337,23 +329,16 @@ https://www.emacswiki.org/emacs/BackupDirectory
 
 ** lsp
 #+BEGIN_SRC emacs-lisp
-  (use-package lsp-mode
-    :hook (((c++-mode
-             haskell-mode
-             python-mode)
-            . lsp)
-           (lsp-mode . yas-minor-mode))
-    :commands lsp
+  (use-package eglot
+    :hook ((haskell-mode . eglot-ensure)
+           (python-mode . eglot-ensure))
     :config
-    (setq lsp-prefer-flymake nil))
-
-  (use-package lsp-ui
-    :commands lsp-ui-mode
+    (setq-default eglot-workspace-configuration
+                  '())
     :custom
-    (lsp-ui-doc-show-with-cursor t))
-
-  (use-package yasnippet
-    :after lsp-mode)
+    (eglot-autoshutdown t)  ;; shutdown language server after closing last file
+    (eglot-confirm-server-initiated-edits nil)  ;; allow edits without confirmation
+    )
 #+END_SRC
 
 ** magit
